@@ -1,0 +1,9 @@
+# Al Fatih Impact Platform - Proteksi Shared Hosting
+Options -Indexes
+<Files "config.php">
+  Require all denied
+</Files>
+<Files "schema.sql">
+  Require all denied
+</Files>
+RedirectMatch 403 ^/core/.*$

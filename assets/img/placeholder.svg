@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#0B7A4B"/><stop offset="1" stop-color="#0e9a5e"/></linearGradient></defs>
+<rect width="400" height="240" fill="url(#g)"/>
+<text x="200" y="118" font-family="Arial" font-size="40" fill="#ffffff" opacity=".85" text-anchor="middle">&#xFDFD;</text>
+<text x="200" y="160" font-family="Arial" font-size="13" fill="#ffffff" opacity=".7" text-anchor="middle">Al Fatih Impact Platform</text>
+</svg>
