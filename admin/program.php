@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $benef = (int)($_POST['beneficiaries'] ?? 0);
         $video = trim($_POST['video_url'] ?? '');
         $status = in_array($_POST['status']??'active',['active','draft','closed'])?$_POST['status']:'active';
-        $imageUpload = upload_asset_image('program_image_file', 'program');
+        $imageUpload = upload_asset_image('program_image_file', 'program', ['webp']);
         if (!$imageUpload['ok']) {
             flash_set($imageUpload['message'], 'err');
             header('Location: '.admin_url('program', $id ? ['edit' => $id] : [])); exit;
@@ -68,7 +68,8 @@ flash_show();
       <label>Ringkasan Singkat</label><input type="text" name="excerpt" value="<?= e($edit['excerpt']??'') ?>">
       <label>Deskripsi</label><textarea name="description" rows="4"><?= e($edit['description']??'') ?></textarea>
       <label>Visual Program</label>
-      <input type="file" name="program_image_file" accept=".jpg,.jpeg,.png,.webp,.gif,.svg">
+      <input type="file" name="program_image_file" accept=".webp">
+      <small class="secret-hint">Gunakan gambar horizontal <b>WebP</b>. Rekomendasi terbaik <b>1600 x 900 px</b>, alternatif aman <b>1400 x 900 px</b> atau <b>1200 x 675 px</b>. Hindari gambar kotak atau terlalu kecil.</small>
       <?php if (!empty($edit['image'])): ?>
       <div class="upload-preview" style="margin-top:10px">
         <img src="<?= e(asset('img/' . $edit['image'])) ?>" alt="<?= e($edit['title'] ?? 'Visual Program') ?>">
@@ -90,7 +91,7 @@ flash_show();
       <button class="btn btn-primary btn-block"><?= $edit?'Simpan Perubahan':'Tambah Program' ?></button>
       <?php if ($edit): ?><a class="btn btn-ghost btn-block" href="<?= admin_url('program') ?>">Batal</a><?php endif; ?>
     </form>
-    <p class="note">Upload visual program langsung di form ini. Format yang didukung: JPG, PNG, WEBP, GIF, dan SVG.</p>
+    <p class="note">Upload visual program langsung di form ini. Format yang diwajibkan adalah <b>WebP</b> agar website lebih ringan. Ukuran terbaik untuk website adalah <b>1600 x 900 px</b> dengan rasio <b>16:9</b>. Ukuran yang masih bagus: <b>1400 x 900 px</b>, <b>1200 x 675 px</b>, atau minimum <b>960 x 540 px</b>.</p>
   </div>
 
   <div class="panel">

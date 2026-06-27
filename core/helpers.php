@@ -229,7 +229,7 @@ function setting_lines($key, $default = '') {
     return array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $value))));
 }
 
-function upload_asset_image($field, $prefix = 'media') {
+function upload_asset_image($field, $prefix = 'media', $allowedExtensions = null) {
     if (empty($_FILES[$field]) || !is_array($_FILES[$field])) {
         return ['ok' => false, 'file' => null, 'message' => 'File upload tidak ditemukan.'];
     }
@@ -243,9 +243,15 @@ function upload_asset_image($field, $prefix = 'media') {
     }
 
     $ext = strtolower(pathinfo($file['name'] ?? '', PATHINFO_EXTENSION));
-    $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
+    $allowed = $allowedExtensions;
+    if (!is_array($allowed) || !$allowed) {
+        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
+    }
+    $allowed = array_values(array_unique(array_map(static function ($value) {
+        return strtolower(trim((string) $value));
+    }, $allowed)));
     if (!in_array($ext, $allowed, true)) {
-        return ['ok' => false, 'file' => null, 'message' => 'Format file tidak didukung. Gunakan JPG, PNG, WEBP, GIF, atau SVG.'];
+        return ['ok' => false, 'file' => null, 'message' => 'Format file tidak didukung. Gunakan ' . strtoupper(implode(', ', $allowed)) . '.'];
     }
 
     $dir = __DIR__ . '/../assets/img';

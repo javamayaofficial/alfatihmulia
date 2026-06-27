@@ -61,7 +61,7 @@ $saveProfileSettings = function () {
             set_setting($field, $upload['url']);
         }
     }
-    $logoUpload = upload_asset_image('yayasan_logo_file', 'yayasan-logo');
+    $logoUpload = upload_asset_image('yayasan_logo_file', 'yayasan-logo', ['webp']);
     if (!$logoUpload['ok']) {
         return $logoUpload;
     }
@@ -130,7 +130,7 @@ $savePaymentSettings = function () {
     foreach (['payment_bank_primary_name', 'payment_bank_primary_number', 'payment_bank_primary_holder'] as $k) {
         if (isset($_POST[$k])) set_setting($k, trim($_POST[$k]));
     }
-    $upload = upload_public_file('payment_qris_upload', 'payment-qris', ['jpg', 'jpeg', 'png', 'webp']);
+    $upload = upload_public_file('payment_qris_upload', 'payment-qris', ['webp']);
     if (!$upload['ok']) {
         return $upload;
     }
@@ -474,8 +474,8 @@ $renderSecretInput = function ($name, $value, $placeholder = '', $formId = '') {
     </div>
     <div class="grid-2">
       <div>
-        <label>Upload Logo Yayasan</label><input form="<?= e($bulkFormId) ?>" type="file" name="yayasan_logo_file" accept=".jpg,.jpeg,.png,.webp,.gif,.svg">
-        <small class="secret-hint">Gunakan logo PNG/WebP transparan agar tampil lebih rapi di header desktop maupun layar HP.</small>
+        <label>Upload Logo Yayasan</label><input form="<?= e($bulkFormId) ?>" type="file" name="yayasan_logo_file" accept=".webp">
+        <small class="secret-hint">Gunakan logo horizontal <b>WebP transparan</b>. Rekomendasi terbaik <b>1200 x 320 px</b>, alternatif aman <b>1000 x 280 px</b> atau <b>900 x 260 px</b>.</small>
         <?php if ($currentLogo): ?>
         <div class="upload-preview upload-preview-logo">
           <img src="<?= e(asset('img/' . $currentLogo)) ?>" alt="Logo Yayasan">
@@ -490,7 +490,10 @@ $renderSecretInput = function ($name, $value, $placeholder = '', $formId = '') {
         <h3>Catatan Logo</h3>
         <ul class="mini-list compact">
           <li>Logo otomatis tampil di header, footer, panel admin, halaman login, dan register.</li>
-          <li>Desain disiapkan agar tetap proporsional di desktop dan HP.</li>
+          <li>Ukuran terbaik untuk website: <b>1200 x 320 px</b> dengan rasio horizontal sekitar <b>3.75 : 1</b>.</li>
+          <li>Ukuran yang masih bagus: <b>1000 x 280 px</b>, <b>900 x 260 px</b>, atau minimum <b>600 x 180 px</b>.</li>
+          <li>Gunakan file <b>WebP transparan</b> agar ringan di website, dan hindari logo kotak seperti <b>300 x 300 px</b> atau <b>500 x 500 px</b> untuk header.</li>
+          <li>Jika logo asli berbentuk lambang tinggi, sebaiknya buat versi khusus website: lambang di kiri dan tulisan yayasan di kanan dalam satu file horizontal.</li>
           <li>Simpan profil setelah memilih file logo baru.</li>
         </ul>
         <?php if ($currentLogo): ?>
@@ -575,7 +578,8 @@ $renderSecretInput = function ($name, $value, $placeholder = '', $formId = '') {
     </div>
     <div class="grid-2">
       <div>
-        <label>Upload QRIS</label><input form="<?= e($bulkFormId) ?>" type="file" name="payment_qris_upload" accept=".jpg,.jpeg,.png,.webp">
+        <label>Upload QRIS</label><input form="<?= e($bulkFormId) ?>" type="file" name="payment_qris_upload" accept=".webp">
+        <small class="secret-hint">Gunakan file <b>WebP</b> persegi. Rekomendasi terbaik <b>1200 x 1200 px</b>, alternatif aman <b>1080 x 1080 px</b> atau <b>900 x 900 px</b>.</small>
         <?php if (setting('payment_qris_file')): ?><a class="inline-link" href="<?= e(setting('payment_qris_file')) ?>" target="_blank" rel="noopener">Lihat QRIS saat ini</a><?php endif; ?>
         <?= $renderDocPreview('payment_qris_file', 'QRIS Pembayaran') ?>
       </div>
@@ -584,6 +588,7 @@ $renderSecretInput = function ($name, $value, $placeholder = '', $formId = '') {
         <ul class="mini-list compact">
           <li>Rekening utama akan tampil pertama pada halaman donasi.</li>
           <li>QRIS akan ditampilkan sebagai opsi scan untuk donatur transfer manual.</li>
+          <li>Gunakan file <b>WebP</b> persegi agar ringan dimuat dan tetap tajam saat dibuka.</li>
           <li>Rekening tambahan dapat diatur di panel bawah.</li>
         </ul>
       </div>

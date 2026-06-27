@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $description = trim($_POST['description'] ?? '');
         $status = $_POST['status'] ?? 'published';
         $sortOrder = (int) ($_POST['sort_order'] ?? 0);
-        $upload = upload_asset_image('media_file', 'gallery');
+        $upload = upload_asset_image('media_file', 'gallery', ['webp']);
         if (!$upload['ok']) {
             flash_set($upload['message'], 'err');
             header('Location: ' . admin_url('galeri', $id > 0 ? ['edit' => $id] : []));
@@ -110,7 +110,8 @@ flash_show();
         </div>
       </div>
       <label>Nama File Gambar / Thumbnail</label><input type="text" name="media_path" value="<?= e($edit['media_path'] ?? '') ?>" placeholder="Contoh: galeri-air-01.jpg">
-      <label>Upload Gambar / Thumbnail</label><input type="file" name="media_file" accept=".jpg,.jpeg,.png,.webp,.gif,.svg">
+      <label>Upload Gambar / Thumbnail</label><input type="file" name="media_file" accept=".webp">
+      <small class="secret-hint">Gunakan gambar horizontal <b>WebP</b>. Rekomendasi terbaik <b>1600 x 900 px</b>, alternatif aman <b>1400 x 900 px</b> atau <b>1200 x 675 px</b>. Jika ini thumbnail video, tetap gunakan rasio <b>16:9</b>.</small>
       <?php if (!empty($edit['media_path'])): ?>
       <div class="upload-preview">
         <img src="<?= e(asset('img/' . $edit['media_path'])) ?>" alt="<?= e($edit['title'] ?? 'Preview galeri') ?>">
@@ -146,7 +147,7 @@ flash_show();
       <button class="btn btn-primary btn-block"><?= $edit ? 'Simpan Perubahan' : 'Tambah Galeri' ?></button>
       <?php if ($edit): ?><a class="btn btn-ghost btn-block" href="<?= admin_url('galeri') ?>">Batal</a><?php endif; ?>
     </form>
-    <p class="note">Saat file diganti atau dihapus dari item ini, sistem akan mencoba membersihkan file lama jika sudah tidak dipakai item lain.</p>
+    <p class="note">Saat file diganti atau dihapus dari item ini, sistem akan mencoba membersihkan file lama jika sudah tidak dipakai item lain. Format yang diwajibkan adalah <b>WebP</b>. Ukuran terbaik untuk galeri adalah <b>1600 x 900 px</b> dengan rasio <b>16:9</b>; minimum yang masih layak <b>960 x 540 px</b>.</p>
   </div>
 
   <div class="panel">

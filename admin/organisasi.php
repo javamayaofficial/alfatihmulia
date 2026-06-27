@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sortOrder = (int) ($_POST['sort_order'] ?? 0);
         $status = trim($_POST['status'] ?? 'published');
 
-        $upload = upload_asset_image('photo_file', 'org');
+        $upload = upload_asset_image('photo_file', 'org', ['webp']);
         if (!$upload['ok']) {
             flash_set($upload['message'], 'err');
             header('Location: ' . admin_url('organisasi', $id > 0 ? ['edit' => $id] : []));
@@ -118,7 +118,8 @@ flash_show();
         </div>
       </div>
       <label>Nama File Foto (opsional)</label><input type="text" name="photo" value="<?= e($edit['photo'] ?? '') ?>" placeholder="Contoh: ketua-yayasan.jpg">
-      <label>Upload Foto</label><input type="file" name="photo_file" accept=".jpg,.jpeg,.png,.webp,.gif,.svg">
+      <label>Upload Foto</label><input type="file" name="photo_file" accept=".webp">
+      <small class="secret-hint">Gunakan foto portrait <b>WebP</b>. Rekomendasi terbaik <b>960 x 1200 px</b>, alternatif aman <b>800 x 1000 px</b> atau <b>720 x 900 px</b>.</small>
       <?php if (!empty($edit['photo'])): ?>
       <div class="upload-preview">
         <img src="<?= e(asset('img/' . $edit['photo'])) ?>" alt="<?= e($edit['full_name'] ?? 'Preview foto organisasi') ?>">
@@ -141,7 +142,7 @@ flash_show();
       <button class="btn btn-primary btn-block"><?= $edit ? 'Simpan Perubahan' : 'Tambah Anggota' ?></button>
       <?php if ($edit): ?><a class="btn btn-ghost btn-block" href="<?= admin_url('organisasi') ?>">Batal</a><?php endif; ?>
     </form>
-    <p class="note">Saat foto diganti atau dihapus, sistem akan mencoba membersihkan file lama jika sudah tidak dipakai konten lain.</p>
+    <p class="note">Saat foto diganti atau dihapus, sistem akan mencoba membersihkan file lama jika sudah tidak dipakai konten lain. Format yang diwajibkan adalah <b>WebP</b> dengan komposisi portrait agar kartu struktur organisasi tampil rapi.</p>
   </div>
 
   <div class="panel">
