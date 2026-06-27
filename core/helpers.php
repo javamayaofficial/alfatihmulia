@@ -14,8 +14,16 @@ function admin_url($r = 'dashboard', $extra = []) {
     $params = array_merge(['r' => $r], $extra);
     return BASE_URL . '/admin/index.php?' . http_build_query($params);
 }
-/** URL aset */
-function asset($path) { return BASE_URL . '/assets/' . ltrim($path, '/'); }
+/** URL aset dengan cache-busting berbasis waktu modifikasi file */
+function asset($path) {
+    $relative = ltrim((string) $path, '/');
+    $url = BASE_URL . '/assets/' . $relative;
+    $absolute = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $relative);
+    if (is_file($absolute)) {
+        return $url . '?v=' . filemtime($absolute);
+    }
+    return $url;
+}
 
 /** Escape output HTML (anti-XSS) */
 function e($str) { return htmlspecialchars((string)$str, ENT_QUOTES, 'UTF-8'); }
