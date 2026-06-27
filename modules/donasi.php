@@ -21,9 +21,9 @@ if ($duitkuActive) {
 }
 
 $manualAccounts = [];
-$primaryBankName = trim((string) setting('payment_bank_primary_name', 'BSI'));
-$primaryBankNumber = trim((string) setting('payment_bank_primary_number', ''));
-$primaryBankHolder = trim((string) setting('payment_bank_primary_holder', setting('yayasan_name', 'Yayasan Al Fatih')));
+$primaryBankName = trim((string) setting('payment_bank_primary_name', 'BSI KCP Bandung'));
+$primaryBankNumber = trim((string) setting('payment_bank_primary_number', '7362699503'));
+$primaryBankHolder = trim((string) setting('payment_bank_primary_holder', 'Yayasan Alfatih Mulia'));
 if ($primaryBankNumber !== '') {
     $manualAccounts[] = [
         'bank_name' => $primaryBankName !== '' ? $primaryBankName : 'BSI',

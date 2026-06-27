@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $stats = DB::all("SELECT * FROM impact_stats ORDER BY sort ASC");
 $bankEdit = isset($_GET['edit_bank']) ? DB::one("SELECT * FROM bank_accounts WHERE id=?", 'i', [(int) $_GET['edit_bank']]) : null;
 $bankRows = DB::all("SELECT * FROM bank_accounts ORDER BY sort_order ASC, id DESC");
-$primaryBankNumber = trim((string) setting('payment_bank_primary_number', ''));
+$primaryBankNumber = trim((string) setting('payment_bank_primary_number', '7362699503'));
 $publishedExtraAccounts = 0;
 foreach ($bankRows as $bankRow) {
     if (($bankRow['status'] ?? '') === 'published') {
@@ -365,14 +365,14 @@ $renderSecretInput = function ($name, $value, $placeholder = '') {
     <label>Visi</label><input type="text" name="yayasan_visi" value="<?= e(setting('yayasan_visi')) ?>">
     <label>Misi (satu baris per misi)</label><textarea name="yayasan_misi" rows="3"><?= e(setting('yayasan_misi')) ?></textarea>
     <div class="grid-2">
-      <div><label>Akta Pendirian</label><input type="text" name="legal_akta" value="<?= e(setting('legal_akta')) ?>"></div>
-      <div><label>SK Kemenkumham</label><input type="text" name="legal_sk" value="<?= e(setting('legal_sk')) ?>"></div>
-      <div><label>NPWP</label><input type="text" name="legal_npwp" value="<?= e(setting('legal_npwp')) ?>"></div>
+      <div><label>Akta Pendirian</label><input type="text" name="legal_akta" value="<?= e(setting('legal_akta', 'Akta Notaris Nomor 18 tanggal 11 Juni 2026 oleh BENNY NUR CHANIAGO, S.H., M.Kn.')) ?>"></div>
+      <div><label>SK Kemenkumham</label><input type="text" name="legal_sk" value="<?= e(setting('legal_sk', 'Keputusan Menteri Hukum RI Nomor AHU-0014152.AH.01.04.Tahun 2026 tanggal 12 Juni 2026.')) ?>"></div>
+      <div><label>NPWP</label><input type="text" name="legal_npwp" value="<?= e(setting('legal_npwp')) ?>" placeholder="Isi nomor NPWP yayasan bila sudah tersedia"></div>
       <div>
         <label>Rekening Resmi</label><input type="text" name="legal_rekening" value="<?= e(setting('legal_rekening')) ?>" placeholder="Contoh: BSI 123456 a.n Yayasan">
         <small class="secret-hint">Kosongkan bila ingin mengikuti rekening utama pada panel pembayaran manual.</small>
       </div>
-      <div><label>Struktur Organisasi</label><input type="text" name="legal_struktur" value="<?= e(setting('legal_struktur')) ?>" placeholder="Keterangan singkat struktur organisasi"></div>
+      <div><label>Struktur Organisasi</label><input type="text" name="legal_struktur" value="<?= e(setting('legal_struktur', 'Pembina: Riyandi. Pengawas: Cut Rossy Meutia. Pengurus: Yudha Eris Setiawan, Ari Cipta Robbi, dan Ichsan Nugraha.')) ?>" placeholder="Keterangan singkat struktur organisasi"></div>
       <div><label>Target Dana Reward Umrah (Rp)</label><input type="text" name="umrah_target" inputmode="numeric" value="<?= e(setting('umrah_target','50000000')) ?>"></div>
       <div><label>Link Google Maps</label><input type="text" name="google_maps_link" value="<?= e(setting('google_maps_link')) ?>" placeholder="https://maps.google.com/..."></div>
       <div><label>Instagram</label><input type="text" name="social_instagram" value="<?= e(setting('social_instagram')) ?>" placeholder="@yayasan"></div>
@@ -446,9 +446,9 @@ $renderSecretInput = function ($name, $value, $placeholder = '') {
   <p class="muted">Atur rekening utama BSI, unggah QRIS resmi, lalu tambahkan rekening lain bila yayasan memiliki opsi transfer tambahan.</p>
   <form method="post" class="form" enctype="multipart/form-data"><?= csrf_field() ?><input type="hidden" name="act" value="payments">
     <div class="grid-2">
-      <div><label>Nama Bank Utama</label><input type="text" name="payment_bank_primary_name" value="<?= e(setting('payment_bank_primary_name', 'BSI')) ?>" placeholder="Contoh: BSI"></div>
-      <div><label>Nomor Rekening Utama</label><input type="text" name="payment_bank_primary_number" value="<?= e(setting('payment_bank_primary_number')) ?>" placeholder="Contoh: 1234567890"></div>
-      <div><label>Nama Pemilik Rekening</label><input type="text" name="payment_bank_primary_holder" value="<?= e(setting('payment_bank_primary_holder', setting('yayasan_name'))) ?>" placeholder="Contoh: Yayasan Al Fatih Mulia Haramain"></div>
+      <div><label>Nama Bank Utama</label><input type="text" name="payment_bank_primary_name" value="<?= e(setting('payment_bank_primary_name', 'BSI KCP Bandung')) ?>" placeholder="Contoh: BSI"></div>
+      <div><label>Nomor Rekening Utama</label><input type="text" name="payment_bank_primary_number" value="<?= e(setting('payment_bank_primary_number', '7362699503')) ?>" placeholder="Contoh: 1234567890"></div>
+      <div><label>Nama Pemilik Rekening</label><input type="text" name="payment_bank_primary_holder" value="<?= e(setting('payment_bank_primary_holder', 'Yayasan Alfatih Mulia')) ?>" placeholder="Contoh: Yayasan Al Fatih Mulia Haramain"></div>
     </div>
     <div class="grid-2">
       <div>

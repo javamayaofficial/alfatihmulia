@@ -70,17 +70,17 @@ flash_show();
     <div class="grid-2">
       <div>
         <label>Dewan Pembina</label>
-        <textarea name="about_pembina_list" rows="5"><?= e(setting('about_pembina_list', "Ketua Pembina|Nama akan ditampilkan setelah finalisasi data resmi yayasan.\nAnggota Pembina|Nama akan ditampilkan setelah finalisasi data resmi yayasan.")) ?></textarea>
+        <textarea name="about_pembina_list" rows="5"><?= e(setting('about_pembina_list', "Ketua Pembina|Riyandi")) ?></textarea>
         <p class="note">Format: `Jabatan|Keterangan`, satu baris per orang.</p>
       </div>
       <div>
         <label>Dewan Pengawas</label>
-        <textarea name="about_pengawas_list" rows="5"><?= e(setting('about_pengawas_list', "Ketua Pengawas|Nama akan ditampilkan setelah finalisasi data resmi yayasan.\nAnggota Pengawas|Nama akan ditampilkan setelah finalisasi data resmi yayasan.")) ?></textarea>
+        <textarea name="about_pengawas_list" rows="5"><?= e(setting('about_pengawas_list', "Ketua Pengawas|Cut Rossy Meutia")) ?></textarea>
         <p class="note">Format: `Jabatan|Keterangan`, satu baris per orang.</p>
       </div>
     </div>
     <label>Pengurus Yayasan</label>
-    <textarea name="about_pengurus_list" rows="5"><?= e(setting('about_pengurus_list', "Ketua Yayasan|Nama akan ditampilkan setelah finalisasi data resmi yayasan.\nSekretaris|Nama akan ditampilkan setelah finalisasi data resmi yayasan.\nBendahara|Nama akan ditampilkan setelah finalisasi data resmi yayasan.\nKepala Program|Nama akan ditampilkan setelah finalisasi data resmi yayasan.")) ?></textarea>
+    <textarea name="about_pengurus_list" rows="5"><?= e(setting('about_pengurus_list', "Ketua Yayasan|Yudha Eris Setiawan\nSekretaris|Ari Cipta Robbi\nBendahara|Ichsan Nugraha")) ?></textarea>
     <p class="note">Format: `Jabatan|Keterangan`, satu baris per orang.</p>
     <button class="btn btn-primary">Simpan Konten Tentang</button>
   </form>

@@ -10,9 +10,9 @@ $aboutLegalIntro = setting('about_legal_intro', 'Informasi legalitas berikut dit
 $aboutLeadershipIntro = setting('about_leadership_intro', 'Susunan kepemimpinan yayasan ditampilkan agar publik memahami struktur amanah dan tata kelola organisasi.');
 $officialAccountText = trim((string) setting('legal_rekening', ''));
 if ($officialAccountText === '') {
-  $officialBankName = trim((string) setting('payment_bank_primary_name', 'BSI'));
-  $officialBankNumber = trim((string) setting('payment_bank_primary_number', ''));
-  $officialBankHolder = trim((string) setting('payment_bank_primary_holder', $yname));
+  $officialBankName = trim((string) setting('payment_bank_primary_name', 'BSI KCP Bandung'));
+  $officialBankNumber = trim((string) setting('payment_bank_primary_number', '7362699503'));
+  $officialBankHolder = trim((string) setting('payment_bank_primary_holder', 'Yayasan Alfatih Mulia'));
   if ($officialBankNumber !== '') {
     $officialAccountText = ($officialBankName !== '' ? $officialBankName . ' ' : '') . $officialBankNumber;
     if ($officialBankHolder !== '') {
@@ -23,16 +23,16 @@ if ($officialAccountText === '') {
   }
 }
 $legal = [
-  ['label' => 'Akta Notaris', 'value' => setting('legal_akta', 'Nomor dokumen akan ditampilkan setelah verifikasi internal yayasan.'), 'file' => setting('legal_akta_file', '')],
-  ['label' => 'SK Kemenkumham', 'value' => setting('legal_sk', 'Dokumen legal tersedia dan siap dipublikasikan sesuai kebutuhan trust publik.'), 'file' => setting('legal_sk_file', '')],
-  ['label' => 'NPWP', 'value' => setting('legal_npwp', 'Informasi NPWP resmi dapat ditampilkan pada tahap publikasi legalitas penuh.'), 'file' => setting('legal_npwp_file', '')],
+  ['label' => 'Akta Notaris', 'value' => setting('legal_akta', 'Akta Notaris Nomor 18 tanggal 11 Juni 2026 oleh BENNY NUR CHANIAGO, S.H., M.Kn.'), 'file' => setting('legal_akta_file', '')],
+  ['label' => 'SK Kemenkumham', 'value' => setting('legal_sk', 'Keputusan Menteri Hukum RI Nomor AHU-0014152.AH.01.04.Tahun 2026 tanggal 12 Juni 2026.'), 'file' => setting('legal_sk_file', '')],
+  ['label' => 'NPWP', 'value' => setting('legal_npwp', 'Informasi NPWP resmi dapat ditampilkan setelah dokumen perpajakan diunggah oleh admin.'), 'file' => setting('legal_npwp_file', '')],
   ['label' => 'Rekening Resmi', 'value' => $officialAccountText, 'file' => ''],
-  ['label' => 'Struktur Organisasi', 'value' => setting('legal_struktur', 'Struktur organisasi inti akan diperbarui secara berkala sesuai keputusan yayasan.'), 'file' => ''],
+  ['label' => 'Struktur Organisasi', 'value' => setting('legal_struktur', 'Pembina: Riyandi. Pengawas: Cut Rossy Meutia. Pengurus: Yudha Eris Setiawan, Ari Cipta Robbi, dan Ichsan Nugraha.'), 'file' => ''],
 ];
 $defaultBoards = [
-  'Dewan Pembina' => ["Ketua Pembina|Nama akan ditampilkan setelah finalisasi data resmi yayasan.", "Anggota Pembina|Nama akan ditampilkan setelah finalisasi data resmi yayasan."],
-  'Dewan Pengawas' => ["Ketua Pengawas|Nama akan ditampilkan setelah finalisasi data resmi yayasan.", "Anggota Pengawas|Nama akan ditampilkan setelah finalisasi data resmi yayasan."],
-  'Pengurus Yayasan' => ["Ketua Yayasan|Nama akan ditampilkan setelah finalisasi data resmi yayasan.", "Sekretaris|Nama akan ditampilkan setelah finalisasi data resmi yayasan.", "Bendahara|Nama akan ditampilkan setelah finalisasi data resmi yayasan.", "Kepala Program|Nama akan ditampilkan setelah finalisasi data resmi yayasan."],
+  'Dewan Pembina' => ["Ketua Pembina|Riyandi"],
+  'Dewan Pengawas' => ["Ketua Pengawas|Cut Rossy Meutia"],
+  'Pengurus Yayasan' => ["Ketua Yayasan|Yudha Eris Setiawan", "Sekretaris|Ari Cipta Robbi", "Bendahara|Ichsan Nugraha"],
 ];
 $boardSettings = [
   'Dewan Pembina' => setting_lines('about_pembina_list', implode("\n", $defaultBoards['Dewan Pembina'])),
