@@ -112,8 +112,7 @@ function render_brand_mark($class = 'brand-mark', $alt = 'Logo Yayasan') {
     $logo = yayasan_logo_meta();
     if ($logo['url'] !== '') {
         $logoClass = trim($class . ' brand-has-logo ' . $logo['variant']);
-        $style = '--brand-logo-image:url(\'' . e($logo['url']) . '\')';
-        return '<span class="' . e($logoClass) . '"><span class="brand-logo-shell" style="' . $style . '"><img class="brand-logo-img" src="' . e($logo['url']) . '" alt="' . e($alt) . '" loading="eager" decoding="async"></span></span>';
+        return '<span class="' . e($logoClass) . '"><span class="brand-logo-shell"><img class="brand-logo-img" src="' . e($logo['url']) . '" alt="' . e($alt) . '" loading="eager" decoding="async"></span></span>';
     }
     return '<span class="' . e($class) . '">﷽</span>';
 }

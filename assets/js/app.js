@@ -59,55 +59,56 @@
 
   // ---- Motion premium halaman publik ----
   if(!body.classList.contains('admin-body')){
-    var revealTargets = document.querySelectorAll(
-      '.section, .panel, .program-card, .news-card, .gallery-card, .feature-card, .testi-card, ' +
-      '.partner-card, .org-person-card, .contact-card, .method-card, .doc-item, .board-row, ' +
-      '.stat-card, .cta-banner, .legal-card, .hero-panel'
-    );
-    if(revealTargets.length){
+    var nav = document.querySelector('.nav');
+    var syncNavState = function(){
+      if(!nav) return;
+      nav.classList.toggle('is-scrolled', window.scrollY > 18);
+    };
+    syncNavState();
+
+    var motionTargets = document.querySelectorAll('.section-head, .hero-cta, .hero-trust, .hero-panel, .cta-banner, .final-cta');
+    if(motionTargets.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
       body.classList.add('motion-ready');
       if('IntersectionObserver' in window){
-        var revealObserver = new IntersectionObserver(function(entries){
+        var motionObserver = new IntersectionObserver(function(entries){
           entries.forEach(function(entry){
             if(entry.isIntersecting){
               entry.target.classList.add('is-visible');
-              revealObserver.unobserve(entry.target);
+              motionObserver.unobserve(entry.target);
             }
           });
-        }, {threshold: 0.14, rootMargin: '0px 0px -8% 0px'});
-        revealTargets.forEach(function(el){ revealObserver.observe(el); });
+        }, {threshold: 0.2, rootMargin: '0px 0px -10% 0px'});
+        motionTargets.forEach(function(el){ motionObserver.observe(el); });
       } else {
-        revealTargets.forEach(function(el){ el.classList.add('is-visible'); });
+        motionTargets.forEach(function(el){ el.classList.add('is-visible'); });
       }
     }
 
-    var parallaxTargets = document.querySelectorAll('.hero, .program-img, .news-img, .gallery-cover, .article-img, .org-photo, .program-hero');
-    if(parallaxTargets.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      parallaxTargets.forEach(function(el){ el.classList.add('parallax-on-scroll'); });
+    var heroTargets = document.querySelectorAll('.hero');
+    if(heroTargets.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
       var ticking = false;
-      var updateParallax = function(){
+      var updateHeroParallax = function(){
         var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
-        parallaxTargets.forEach(function(el){
+        heroTargets.forEach(function(el){
           var rect = el.getBoundingClientRect();
           var centerOffset = rect.top + (rect.height / 2) - (viewportHeight / 2);
           var ratio = Math.max(-1, Math.min(1, centerOffset / viewportHeight));
-          if(el.classList.contains('hero')){
-            el.style.setProperty('--hero-shift', (-ratio * 22).toFixed(2) + 'px');
-          } else {
-            el.style.setProperty('--parallax-shift', (ratio * -18).toFixed(2) + 'px');
-          }
+          el.style.setProperty('--hero-shift', (-ratio * 14).toFixed(2) + 'px');
         });
         ticking = false;
       };
-      var requestParallax = function(){
+      var requestHeroParallax = function(){
         if(ticking) return;
         ticking = true;
-        window.requestAnimationFrame(updateParallax);
+        window.requestAnimationFrame(updateHeroParallax);
       };
-      updateParallax();
-      window.addEventListener('scroll', requestParallax, {passive:true});
-      window.addEventListener('resize', requestParallax);
+      updateHeroParallax();
+      window.addEventListener('scroll', requestHeroParallax, {passive:true});
+      window.addEventListener('resize', requestHeroParallax);
     }
+
+    window.addEventListener('scroll', syncNavState, {passive:true});
+    window.addEventListener('resize', syncNavState);
   }
 
   // ---- Bunyi sukses admin ----
