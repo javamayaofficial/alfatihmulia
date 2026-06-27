@@ -9,21 +9,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $d = DB::one("SELECT * FROM donations WHERE id=?", 'i', [$id]);
     if ($d) {
         if ($act === 'verify' && $d['status'] !== 'verified') {
-            DB::run("UPDATE donations SET status='verified', verified_at=NOW() WHERE id=?", 'i', [$id]);
-            // update collected_amount program (anti-double via cek status sebelumnya 'verified')
-            if ($d['program_id']) {
-                DB::run("UPDATE programs SET collected_amount = collected_amount + ? WHERE id=?", 'ii', [(int)$d['amount'], (int)$d['program_id']]);
-            }
-            audit('verify_donasi', $d['invoice'].' '.rupiah($d['amount']));
-            // notif WA donatur (gated)
-            if ($d['donor_phone']) send_wa($d['donor_phone'], "Alhamdulillah, donasi Anda ".rupiah($d['amount'])." (".$d['invoice'].") telah DIVERIFIKASI. Jazakallahu khairan. — ".setting('yayasan_name','Yayasan Al Fatih'));
+            verify_donation_payment($d, 'admin_manual');
             flash_set('Donasi '.$d['invoice'].' berhasil diverifikasi.');
         } elseif ($act === 'reject') {
-            if ($d['status'] === 'verified' && $d['program_id']) {
-                DB::run("UPDATE programs SET collected_amount = GREATEST(0, collected_amount - ?) WHERE id=?", 'ii', [(int)$d['amount'], (int)$d['program_id']]);
-            }
-            DB::run("UPDATE donations SET status='rejected' WHERE id=?", 'i', [$id]);
-            audit('reject_donasi', $d['invoice']);
+            reject_donation_payment($d, 'admin_manual');
             flash_set('Donasi '.$d['invoice'].' ditandai ditolak.', 'err');
         }
     }
@@ -47,7 +36,7 @@ flash_show();
 <?php if (!$rows): ?><div class="empty-state small"><p>Tidak ada data donasi pada filter ini.</p></div>
 <?php else: ?>
 <div class="table-wrap"><table class="table">
-  <thead><tr><th>Invoice</th><th>Donatur</th><th>WA</th><th class="right">Nominal</th><th>Kategori</th><th>Program</th><th>Referral</th><th>Status</th><th>Aksi</th></tr></thead>
+  <thead><tr><th>Invoice</th><th>Donatur</th><th>WA</th><th class="right">Nominal</th><th>Kategori</th><th>Program</th><th>Metode</th><th>Referral</th><th>Status</th><th>Aksi</th></tr></thead>
   <tbody><?php foreach ($rows as $d): ?>
     <tr>
       <td><?= e($d['invoice']) ?><br><small class="muted"><?= e(date('d/m/y H:i', strtotime($d['created_at']))) ?></small></td>
@@ -56,6 +45,7 @@ flash_show();
       <td class="right"><b><?= rupiah($d['amount']) ?></b></td>
       <td><?= e(ucfirst($d['category'])) ?></td>
       <td><?= e($d['program']?:'Umum') ?></td>
+      <td><?= e(($d['payment_method'] ?? 'transfer') === 'duitku' ? 'Duitku' : 'Transfer Manual') ?></td>
       <td><?= e($d['referral_code']?:'-') ?></td>
       <td><span class="badge badge-<?= $d['status'] ?>"><?= e($d['status']) ?></span></td>
       <td class="actions">

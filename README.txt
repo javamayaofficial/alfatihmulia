@@ -90,12 +90,14 @@ Beberapa fitur sudah TERPASANG dan akan AKTIF otomatis
 begitu Anda memasukkan "kunci API" di menu:
   Admin -> Pengaturan -> Kunci API
 
-  • Midtrans           -> isi Merchant ID, Client Key,
-                          Server Key, lalu set webhook ke
-                          /api/webhook-midtrans.php
-  • Xendit             -> isi API Key + Callback Token,
-                          lalu set webhook ke
-                          /api/webhook-xendit.php
+  • Duitku             -> isi Merchant Code + API Key,
+                          aktifkan mode production bila
+                          kredensial live, lalu set webhook ke
+                          /api/webhook-duitku.php
+  • Transfer Manual    -> isi rekening utama yayasan,
+                          tambah rekening lain bila perlu,
+                          dan unggah QRIS resmi di menu
+                          Pengaturan -> Pembayaran Manual
   • Mailketing         -> isi API Token + List ID agar email
                           donatur/relawan otomatis masuk ke
                           list marketing.
@@ -103,10 +105,10 @@ begitu Anda memasukkan "kunci API" di menu:
                           untuk notifikasi WhatsApp otomatis.
   • Google Maps        -> peta sebaran program interaktif.
 
-SEBELUM kunci diisi, platform tetap berjalan penuh dengan
-alur manual: donatur konfirmasi via tombol WhatsApp, dan
-admin memverifikasi donasi dari panel. Jadi Anda bisa
-langsung beroperasi hari ini, tanpa menunggu apa pun.
+SEBELUM kunci Duitku diisi, platform tetap berjalan penuh
+dengan alur manual: donatur transfer ke rekening/QRIS lalu
+konfirmasi via WhatsApp, dan admin memverifikasi donasi dari
+panel. Jadi Anda bisa langsung beroperasi hari ini.
 
 --------------------------------------------------------
 STRUKTUR ROLE ADMIN

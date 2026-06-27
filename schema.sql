@@ -119,6 +119,84 @@ CREATE TABLE IF NOT EXISTS `testimonials` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- ---------- VOLUNTEER LEADS ----------
+CREATE TABLE IF NOT EXISTS `volunteer_leads` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(120) NOT NULL,
+  `city` VARCHAR(120) DEFAULT NULL,
+  `phone` VARCHAR(25) NOT NULL,
+  `email` VARCHAR(150) DEFAULT NULL,
+  `profession` VARCHAR(120) DEFAULT NULL,
+  `division` VARCHAR(120) DEFAULT NULL,
+  `note` VARCHAR(500) DEFAULT NULL,
+  `status` ENUM('new','contacted','qualified','rejected') NOT NULL DEFAULT 'new',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ---------- MEDIA GALLERY ----------
+CREATE TABLE IF NOT EXISTS `media_gallery` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(180) NOT NULL,
+  `category` VARCHAR(80) DEFAULT NULL,
+  `media_type` ENUM('photo','video') NOT NULL DEFAULT 'photo',
+  `media_path` VARCHAR(255) DEFAULT NULL,
+  `video_url` VARCHAR(255) DEFAULT NULL,
+  `description` TEXT,
+  `status` ENUM('published','draft') NOT NULL DEFAULT 'published',
+  `sort_order` INT NOT NULL DEFAULT 0,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_category` (`category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ---------- PARTNERSHIP LEADS ----------
+CREATE TABLE IF NOT EXISTS `partnership_leads` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `organization_name` VARCHAR(180) NOT NULL,
+  `contact_name` VARCHAR(120) NOT NULL,
+  `phone` VARCHAR(25) NOT NULL,
+  `email` VARCHAR(150) DEFAULT NULL,
+  `partnership_type` VARCHAR(120) DEFAULT NULL,
+  `message` TEXT,
+  `status` ENUM('new','contacted','negotiation','approved','rejected') NOT NULL DEFAULT 'new',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ---------- ORGANIZATION MEMBERS ----------
+CREATE TABLE IF NOT EXISTS `organization_members` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `full_name` VARCHAR(160) NOT NULL,
+  `position` VARCHAR(160) NOT NULL,
+  `board_group` ENUM('pembina','pengawas','pengurus') NOT NULL DEFAULT 'pengurus',
+  `photo` VARCHAR(255) DEFAULT NULL,
+  `bio` TEXT,
+  `sort_order` INT NOT NULL DEFAULT 0,
+  `status` ENUM('published','draft') NOT NULL DEFAULT 'published',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_group` (`board_group`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ---------- BANK ACCOUNTS ----------
+CREATE TABLE IF NOT EXISTS `bank_accounts` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `bank_name` VARCHAR(120) NOT NULL,
+  `account_number` VARCHAR(80) NOT NULL,
+  `account_holder` VARCHAR(160) DEFAULT NULL,
+  `sort_order` INT NOT NULL DEFAULT 0,
+  `status` ENUM('published','draft') NOT NULL DEFAULT 'published',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_sort` (`sort_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- ---------- SETTINGS (key-value, termasuk kunci API) ----------
 CREATE TABLE IF NOT EXISTS `settings` (
   `skey` VARCHAR(80) NOT NULL,

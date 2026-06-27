@@ -1,5 +1,6 @@
 <?php
 if (!defined('APP_NAME')) { exit; }
+$categoryOptions = ['Dakwah','Sedekah','Pendidikan','Umroh','Inspirasi Kebaikan','Berita'];
 if ($_SERVER['REQUEST_METHOD']==='POST') {
     csrf_check();
     $act=$_POST['act']??'';
@@ -24,7 +25,12 @@ flash_show();
   <div class="panel"><div class="panel-head"><h3><?= $edit?'Edit Artikel':'Tulis Artikel' ?></h3></div>
     <form method="post" class="form"><?= csrf_field() ?><input type="hidden" name="act" value="save"><input type="hidden" name="id" value="<?= $edit['id']??'' ?>">
       <label>Judul</label><input type="text" name="title" value="<?= e($edit['title']??'') ?>" required>
-      <label>Kategori</label><input type="text" name="category" value="<?= e($edit['category']??'Berita') ?>">
+      <label>Kategori</label>
+      <select name="category">
+        <?php foreach($categoryOptions as $option): ?>
+        <option value="<?= e($option) ?>" <?= ($edit['category']??'Berita') === $option ? 'selected' : '' ?>><?= e($option) ?></option>
+        <?php endforeach; ?>
+      </select>
       <label>Ringkasan</label><input type="text" name="excerpt" value="<?= e($edit['excerpt']??'') ?>">
       <label>Isi Artikel</label><textarea name="content" rows="6"><?= e($edit['content']??'') ?></textarea>
       <label>Penulis</label><input type="text" name="author" value="<?= e($edit['author']??'Admin Yayasan') ?>">

@@ -1,6 +1,7 @@
 <?php
 if (!defined('APP_NAME')) { exit; }
 $slug = preg_replace('/[^a-z0-9\-]/', '', strtolower($_GET['slug'] ?? ''));
+$selectedCategory = trim($_GET['category'] ?? '');
 
 if ($slug !== '') {
     $a = DB::one("SELECT * FROM articles WHERE slug=? AND status='published' LIMIT 1", 's', [$slug]);
@@ -19,10 +20,26 @@ if ($slug !== '') {
     <?php layout_footer(); return;
 }
 
-$articles = DB::all("SELECT * FROM articles WHERE status='published' ORDER BY created_at DESC LIMIT 30");
+$categories = DB::all("SELECT category, COUNT(*) jml FROM articles WHERE status='published' GROUP BY category ORDER BY category ASC");
+$articles = $selectedCategory !== ''
+    ? DB::all("SELECT * FROM articles WHERE status='published' AND category=? ORDER BY created_at DESC LIMIT 30", 's', [$selectedCategory])
+    : DB::all("SELECT * FROM articles WHERE status='published' ORDER BY created_at DESC LIMIT 30");
 layout_header('Berita & Artikel');
 ?>
-<section class="page-head"><div class="container"><h1>Berita & Kabar Kebaikan</h1><p class="muted">Cerita dampak, kajian, dan kabar terbaru yayasan.</p></div></section>
+<section class="page-head"><div class="container"><span class="pill pill-soft">Berita & Artikel</span><h1>Berita & Artikel</h1><p class="muted">Cerita dampak, kajian, dan kabar terbaru yayasan dalam kategori dakwah, sedekah, pendidikan, umroh, dan inspirasi kebaikan.</p></div></section>
+<?php if ($categories): ?>
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2>Kategori Artikel</h2><p class="muted">Pilih kategori untuk menjelajah topik yang paling relevan bagi pengunjung.</p></div>
+    <div class="chip-row">
+      <a class="chip static <?= $selectedCategory === '' ? 'on' : '' ?>" href="<?= url('artikel') ?>">Semua</a>
+      <?php foreach ($categories as $cat): ?>
+      <a class="chip static <?= $selectedCategory === $cat['category'] ? 'on' : '' ?>" href="<?= url('artikel', ['category' => $cat['category']]) ?>"><?= e($cat['category']) ?> (<?= (int) $cat['jml'] ?>)</a>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
 <section class="section"><div class="container">
   <?php if (!$articles): ?><div class="empty-state"><p>Belum ada artikel. Nantikan kabar kebaikan berikutnya.</p></div>
   <?php else: ?>

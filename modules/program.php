@@ -43,12 +43,79 @@ if ($slug !== '') {
 
 // Daftar semua program
 $programs = DB::all("SELECT * FROM programs WHERE status='active' ORDER BY created_at DESC");
-layout_header('Program Yayasan');
+$programFamilies = [
+    [
+        'title' => 'Duta Jejak Baitullah Indonesia',
+        'summary' => 'Program syiar Baitullah untuk memperkuat ibadah, dakwah, dan pembinaan jamaah di berbagai daerah.',
+        'items' => ['Kajian Umroh', 'Manasik Gratis', 'Safari Dakwah', 'Umroh Dai Pelosok', 'Umroh Guru Ngaji', 'Program Umroh Kebaikan'],
+    ],
+    [
+        'title' => 'Duta Air Kehidupan Indonesia',
+        'summary' => 'Gerakan menghadirkan air bersih dan sarana manfaat untuk masjid, pesantren, majelis taklim, dan fasilitas publik.',
+        'items' => ['Sedekah Air Masjid', 'Sedekah Air Pesantren', 'Sedekah Air Majelis Taklim', 'Sedekah Air Tempat Umum', 'Program 1.000 Titik Air Berkah Indonesia'],
+    ],
+    [
+        'title' => 'Duta Cahaya Ilmu Indonesia',
+        'summary' => 'Pilar pendidikan dan pembinaan generasi melalui beasiswa, wakaf mushaf, dan ekosistem belajar Al-Qur\'an.',
+        'items' => ['Beasiswa Anak Yatim & Dhuafa', 'Wakaf Al-Qur\'an', 'Rumah Qur\'an'],
+    ],
+];
+layout_header('Program');
 ?>
-<section class="page-head"><div class="container"><h1>Program Kebaikan Kami</h1><p class="muted">Setiap program, satu langkah membangun peradaban.</p></div></section>
+<section class="page-head">
+  <div class="container">
+    <span class="pill pill-soft">Program</span>
+    <h1>Duta Kebaikan Indonesia</h1>
+    <p class="muted">Rangkaian program utama yayasan untuk dakwah, air bersih, pendidikan, dan gerakan relawan nasional.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Pilar Program Yayasan</h2>
+      <p class="muted">Struktur program berikut dirancang agar publik mudah memahami arah gerakan dan fokus manfaat yayasan.</p>
+    </div>
+    <div class="feature-grid">
+      <?php foreach ($programFamilies as $family): ?>
+      <div class="feature-card">
+        <span class="tag"><?= e($family['title']) ?></span>
+        <h3><?= e($family['title']) ?></h3>
+        <p class="muted"><?= e($family['summary']) ?></p>
+        <ul class="mini-list">
+          <?php foreach ($family['items'] as $item): ?>
+          <li><?= e($item) ?></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+
+<section class="section section-soft">
+  <div class="container">
+    <div class="section-head">
+      <h2>Gerakan Relawan Nasional</h2>
+      <p class="muted">Relawan menjadi penghubung penting dalam edukasi publik, kampanye program, dan penguatan jaringan manfaat.</p>
+    </div>
+    <div class="cta-inline">
+      <p class="muted">Bergabunglah sebagai bagian dari gerakan nasional Duta Kebaikan Indonesia dan bantu perluas jangkauan program yayasan.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="<?= url('relawan') ?>">Daftar Relawan</a>
+        <a class="btn btn-outline" href="<?= url('leaderboard') ?>">Lihat Leaderboard</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section"><div class="container">
+  <div class="section-head">
+    <h2>Program Berjalan</h2>
+    <p class="muted">Program aktif yang saat ini dapat dipilih langsung oleh donatur.</p>
+  </div>
   <?php if (!$programs): ?>
-    <div class="empty-state"><p>Program baru akan segera hadir. 🌱</p></div>
+    <div class="empty-state"><p>Program baru akan segera hadir. Tim yayasan sedang menyiapkan agenda manfaat berikutnya.</p></div>
   <?php else: ?>
   <div class="card-grid">
     <?php foreach ($programs as $p): $pct=$p['target_amount']>0?min(100,round($p['collected_amount']/$p['target_amount']*100)):0; ?>

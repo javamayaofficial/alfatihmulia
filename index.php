@@ -13,7 +13,8 @@ if ($page === 'logout') { Auth::logout(); header('Location: ' . url('home')); ex
 
 $routes = [
     'home', 'tentang', 'program', 'impact', 'donasi', 'relawan',
-    'leaderboard', 'laporan', 'artikel', 'kontak',
+    'dokumentasi', 'laporan', 'artikel', 'kemitraan', 'kontak',
+    'leaderboard',
     'login', 'register', 'portal',
 ];
 

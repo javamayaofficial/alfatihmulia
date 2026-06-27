@@ -1,69 +1,104 @@
 <?php
 if (!defined('APP_NAME')) { exit; }
-$errors = []; $done = null;
+$errors = [];
+$done = false;
+$divisions = [
+    'Duta Air Kehidupan',
+    'Duta Jejak Baitullah',
+    'Duta Cahaya Ilmu',
+];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_check();
-    $name  = trim($_POST['name'] ?? '');
+    $name = trim($_POST['name'] ?? '');
+    $city = trim($_POST['city'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $pass  = $_POST['password'] ?? '';
+    $email = strtolower(trim($_POST['email'] ?? ''));
+    $profession = trim($_POST['profession'] ?? '');
+    $division = trim($_POST['division'] ?? '');
+    $note = trim($_POST['note'] ?? '');
 
     if ($name === '') $errors[] = 'Nama wajib diisi.';
+    if ($city === '') $errors[] = 'Kota wajib diisi.';
     if (strlen(normalize_wa($phone)) < 10) $errors[] = 'Nomor WhatsApp belum valid.';
-    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Email tidak valid.';
-    if (strlen($pass) < 6) $errors[] = 'Password minimal 6 karakter.';
-    if (!$errors && DB::one("SELECT id FROM users WHERE email=?", 's', [$email])) $errors[] = 'Email sudah terdaftar. Silakan masuk.';
+    if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Email belum valid.';
+    if ($profession === '') $errors[] = 'Profesi wajib diisi.';
+    if (!in_array($division, $divisions, true)) $errors[] = 'Divisi relawan belum dipilih.';
 
     if (!$errors) {
-        $code = make_referral_code($name);
-        $id = DB::insert("INSERT INTO users (name,email,phone,password_hash,role,referral_code) VALUES (?,?,?,?,'relawan',?)",
-            'sssss', [$name, $email, normalize_wa($phone), password_hash($pass, PASSWORD_DEFAULT), $code]);
-        if ($id) {
-            sync_mailketing_subscriber($email, $name, $phone);
-            Auth::login(['id'=>$id,'name'=>$name,'role'=>'relawan','referral_code'=>$code]);
-            $done = $code;
+        $normalizedPhone = normalize_wa($phone);
+        $leadId = DB::insert(
+            "INSERT INTO volunteer_leads (name, city, phone, email, profession, division, note) VALUES (?,?,?,?,?,?,?)",
+            'sssssss',
+            [$name, $city, $normalizedPhone, $email ?: null, $profession, $division, $note]
+        );
+        if ($leadId) {
+            audit('volunteer_lead_created', $name . ' - ' . $division . ' - ' . $city);
+            if ($email !== '') {
+                $synced = sync_mailketing_subscriber($email, $name, $normalizedPhone);
+                audit('volunteer_lead_mailketing_sync', $synced ? ('Lead #' . $leadId . ' subscriber tersinkron') : ('Lead #' . $leadId . ' subscriber tidak tersinkron'));
+            }
+            $notified = notify_admin_new_lead('volunteer', [
+                'name' => $name,
+                'city' => $city,
+                'phone' => $normalizedPhone,
+                'email' => $email,
+                'profession' => $profession,
+                'division' => $division,
+                'note' => $note,
+            ]);
+            audit('volunteer_lead_notification', $notified ? 'Notifikasi admin terkirim' : 'Notifikasi admin tidak aktif / gagal');
+            $done = true;
+        } else {
+            $errors[] = 'Pendaftaran belum dapat diproses. Silakan coba lagi.';
         }
     }
 }
 
-layout_header('Jadi Relawan');
+layout_header('Relawan');
 ?>
 <section class="page-head gold-head"><div class="container">
-  <span class="pill pill-gold">Duta Air Kehidupan Indonesia</span>
-  <h1>Jadi Relawan, Raih The Legacy Umrah</h1>
-  <p class="muted">Ajak kebaikan lewat link referral pribadimu. Naik di papan peringkat nasional, dan melangkah menuju reward Umrah dari yayasan.</p>
+  <span class="pill pill-gold">Relawan</span>
+  <h1>Open Recruitment Relawan</h1>
+  <p class="muted">Bergabunglah dalam Gerakan Relawan Nasional untuk memperluas manfaat program Duta Kebaikan Indonesia.</p>
 </div></section>
 
 <section class="section"><div class="container two-col">
   <div class="benefits">
-    <h3>Kenapa Jadi Relawan?</h3>
-    <div class="benefit"><span>🔗</span><div><b>Link Referral Pribadi</b><p class="muted">Setiap donasi lewat linkmu tercatat otomatis ke akunmu.</p></div></div>
-    <div class="benefit"><span>🏆</span><div><b>Leaderboard Nasional</b><p class="muted">Bersaing sehat dalam kebaikan bersama relawan se-Indonesia.</p></div></div>
-    <div class="benefit"><span>🕋</span><div><b>Progress The Legacy Umrah</b><p class="muted">Kumpulkan kebaikan, capai target, raih reward Umrah.</p></div></div>
-    <div class="benefit"><span>📜</span><div><b>Sertifikat Relawan</b><p class="muted">Pengakuan resmi atas kontribusimu.</p></div></div>
-    <a class="btn btn-ghost" href="<?= url('leaderboard') ?>">Lihat Leaderboard Saat Ini →</a>
+    <h3>Mengapa Bergabung Menjadi Relawan?</h3>
+    <div class="benefit"><span>🌍</span><div><b>Jangkauan Nasional</b><p class="muted">Ambil bagian dalam gerakan sosial yang menjangkau banyak daerah dan kebutuhan umat.</p></div></div>
+    <div class="benefit"><span>🤝</span><div><b>Kolaborasi Tim</b><p class="muted">Bergerak bersama tim yayasan, donatur, dan mitra untuk eksekusi program yang lebih kuat.</p></div></div>
+    <div class="benefit"><span>📚</span><div><b>Penguatan Kapasitas</b><p class="muted">Relawan mendapatkan ruang belajar, keterlibatan program, dan pengalaman kontribusi yang terarah.</p></div></div>
+    <div class="benefit"><span>🕌</span><div><b>Amal Jariyah Berkelanjutan</b><p class="muted">Setiap aksi relawan menjadi bagian dari jejak kebaikan yang memperluas manfaat program yayasan.</p></div></div>
+    <a class="btn btn-ghost" href="<?= url('leaderboard') ?>">Lihat Leaderboard Relawan</a>
   </div>
   <div class="card form-card">
     <?php if ($done): ?>
       <div class="success-box small">
         <div class="success-ic">✓</div>
-        <h2>Selamat datang, Duta Kebaikan!</h2>
-        <p>Kode referral pribadimu:</p>
-        <div class="ref-code"><?= e($done) ?></div>
-        <a class="btn btn-primary btn-block" href="<?= url('portal') ?>">Buka Dashboard Relawan</a>
+        <h2>Pendaftaran Relawan Terkirim</h2>
+        <p>Terima kasih telah mendaftar sebagai relawan. Tim yayasan akan menghubungi Anda untuk tahap selanjutnya.</p>
+        <a class="btn btn-primary btn-block" href="<?= url('home') ?>">Kembali ke Beranda</a>
       </div>
     <?php else: ?>
-      <h3>Daftar Relawan</h3>
+      <h3>Form Pendaftaran Relawan</h3>
       <?php if ($errors): ?><div class="alert alert-err"><?php foreach($errors as $er) echo '<div>• '.e($er).'</div>'; ?></div><?php endif; ?>
       <form method="post" class="form">
         <?= csrf_field() ?>
-        <label>Nama Lengkap</label><input type="text" name="name" required>
-        <label>Nomor WhatsApp</label><input type="tel" name="phone" inputmode="numeric" placeholder="08xxxxxxxxxx" required>
-        <label>Email</label><input type="email" name="email" required>
-        <label>Password</label><input type="password" name="password" placeholder="Minimal 6 karakter" required>
-        <button class="btn btn-primary btn-lg btn-block">Daftar & Mulai Berbagi</button>
-        <p class="note">Sudah punya akun? <a href="<?= url('login') ?>">Masuk di sini</a></p>
+        <label>Nama Lengkap</label><input type="text" name="name" value="<?= e($_POST['name'] ?? '') ?>" required>
+        <label>Kota</label><input type="text" name="city" value="<?= e($_POST['city'] ?? '') ?>" placeholder="Contoh: Jakarta" required>
+        <label>Nomor WhatsApp</label><input type="tel" name="phone" value="<?= e($_POST['phone'] ?? '') ?>" inputmode="numeric" placeholder="08xxxxxxxxxx" required>
+        <label>Email (opsional)</label><input type="email" name="email" value="<?= e($_POST['email'] ?? '') ?>" placeholder="contoh@domain.com">
+        <label>Profesi</label><input type="text" name="profession" value="<?= e($_POST['profession'] ?? '') ?>" placeholder="Contoh: Guru, Mahasiswa, Karyawan" required>
+        <label>Divisi</label>
+        <div class="choice-row">
+          <?php foreach ($divisions as $division): ?>
+          <label class="choice"><input type="radio" name="division" value="<?= e($division) ?>" <?= (($_POST['division'] ?? '') === $division) ? 'checked' : '' ?>><span><?= e($division) ?></span></label>
+          <?php endforeach; ?>
+        </div>
+        <label>Catatan Singkat (opsional)</label><textarea name="note" rows="3" placeholder="Ceritakan pengalaman, minat, atau ketersediaan Anda"><?= e($_POST['note'] ?? '') ?></textarea>
+        <button class="btn btn-primary btn-lg btn-block">Kirim Pendaftaran</button>
+        <p class="note">Tim kami akan meninjau data Anda dan menghubungi melalui WhatsApp atau email jika diperlukan.</p>
       </form>
     <?php endif; ?>
   </div>
