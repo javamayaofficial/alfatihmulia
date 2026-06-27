@@ -25,6 +25,8 @@ $saveApiSettings = function () {
         'duitku_api_key',
         'mailketing_api_token',
         'mailketing_list_id',
+        'mailketing_sender_name',
+        'mailketing_sender_email',
         'fonnte_token',
         'fonnte_sender',
         'google_maps_key',
@@ -549,6 +551,10 @@ $renderSecretInput = function ($name, $value, $placeholder = '', $formId = '') {
     <?= $renderSecretInput('mailketing_api_token', setting('mailketing_api_token'), 'API token dari menu integration Mailketing', $bulkFormId) ?>
     <label>Mailketing List ID</label>
     <input form="<?= e($bulkFormId) ?>" type="text" name="mailketing_list_id" value="<?= e(setting('mailketing_list_id')) ?>" placeholder="Contoh: 1">
+    <label>Mailketing Sender Name</label>
+    <input form="<?= e($bulkFormId) ?>" type="text" name="mailketing_sender_name" value="<?= e(setting('mailketing_sender_name', setting('yayasan_short', setting('yayasan_name')))) ?>" placeholder="Contoh: Al Fatih Mulia">
+    <label>Mailketing Sender Email</label>
+    <input form="<?= e($bulkFormId) ?>" type="email" name="mailketing_sender_email" value="<?= e(setting('mailketing_sender_email', setting('yayasan_email'))) ?>" placeholder="Contoh: admin@alfatihmulia.or.id">
     <label class="check"><input form="<?= e($bulkFormId) ?>" type="checkbox" name="mailketing_auto_sync" value="1" <?= setting('mailketing_auto_sync','1') === '1' ? 'checked' : '' ?>> Sinkronkan email donatur & relawan otomatis ke Mailketing</label>
     <div class="hero-cta">
       <button class="btn" type="submit" form="<?= e($bulkFormId) ?>" name="test_provider" value="mailketing">Test Mailketing</button>

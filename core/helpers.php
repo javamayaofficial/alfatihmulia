@@ -557,6 +557,91 @@ function make_referral_code($name) {
     return 'AIP-' . $base . '-' . rand(1000, 9999);
 }
 
+function make_unique_referral_code($name) {
+    for ($i = 0; $i < 20; $i++) {
+        $code = make_referral_code($name);
+        if (!DB::one("SELECT id FROM users WHERE referral_code=? LIMIT 1", 's', [$code])) {
+            return $code;
+        }
+    }
+    return 'AIP-' . strtoupper(substr(bin2hex(random_bytes(4)), 0, 8));
+}
+
+function make_temporary_password($length = 10) {
+    $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+    $max = strlen($alphabet) - 1;
+    $length = max(8, (int) $length);
+    $password = '';
+    for ($i = 0; $i < $length; $i++) {
+        $password .= $alphabet[random_int(0, $max)];
+    }
+    return $password;
+}
+
+function provision_volunteer_user_from_lead(array $lead) {
+    $email = strtolower(trim((string) ($lead['email'] ?? '')));
+    $phone = normalize_wa((string) ($lead['phone'] ?? ''));
+    $name = trim((string) ($lead['name'] ?? 'Sahabat Relawan'));
+
+    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return ['ok' => false, 'created' => false, 'message' => 'Email lead relawan belum valid, jadi akun login belum bisa dibuat otomatis.'];
+    }
+
+    $existing = DB::one("SELECT * FROM users WHERE email=? LIMIT 1", 's', [$email]);
+    $referralCode = trim((string) ($existing['referral_code'] ?? ''));
+    if ($referralCode === '') {
+        $referralCode = make_unique_referral_code($name);
+    }
+
+    if ($existing) {
+        $role = (string) ($existing['role'] ?? 'donatur');
+        if (in_array($role, ['superadmin', 'admin_program', 'admin_keuangan'], true)) {
+            return ['ok' => false, 'created' => false, 'message' => 'Email ini sudah dipakai akun admin, sehingga tidak bisa diubah otomatis menjadi akun relawan.'];
+        }
+
+        DB::run(
+            "UPDATE users SET name=?, phone=?, role='relawan', referral_code=?, status='active' WHERE id=?",
+            'sssi',
+            [$name, $phone !== '' ? $phone : null, $referralCode, (int) $existing['id']]
+        );
+
+        return [
+            'ok' => true,
+            'created' => false,
+            'message' => 'Akun relawan sudah ada dan diperbarui.',
+            'user' => [
+                'id' => (int) $existing['id'],
+                'email' => $email,
+                'name' => $name,
+                'referral_code' => $referralCode,
+            ],
+        ];
+    }
+
+    $temporaryPassword = make_temporary_password(10);
+    $userId = DB::insert(
+        "INSERT INTO users (name,email,phone,password_hash,role,referral_code,status) VALUES (?,?,?,?,? ,?,'active')",
+        'ssssss',
+        [$name, $email, $phone !== '' ? $phone : null, password_hash($temporaryPassword, PASSWORD_DEFAULT), 'relawan', $referralCode]
+    );
+    if (!$userId) {
+        return ['ok' => false, 'created' => false, 'message' => 'Akun relawan gagal dibuat di database.'];
+    }
+
+    return [
+        'ok' => true,
+        'created' => true,
+        'message' => 'Akun relawan berhasil dibuat.',
+        'temporary_password' => $temporaryPassword,
+        'user' => [
+            'id' => (int) $userId,
+            'email' => $email,
+            'name' => $name,
+            'referral_code' => $referralCode,
+        ],
+    ];
+}
+
 /** Buat nomor invoice donasi */
 function make_invoice() { return 'AIP-' . date('ymd') . '-' . strtoupper(substr(bin2hex(random_bytes(3)), 0, 5)); }
 
@@ -789,6 +874,17 @@ function notify_lead_status_update($type, array $data = []) {
         $message = "Assalamualaikum " . ($data['name'] ?? 'Sahabat Relawan') . ",\n"
             . "Update pendaftaran relawan di {$appName}: " . ($statusTextMap[$status] ?? 'status pendaftaran Anda telah diperbarui.') . "\n"
             . "Divisi: " . (($data['division'] ?? '') !== '' ? $data['division'] : '-') . "\n";
+        if ($status === 'qualified' && !empty($data['login_email'])) {
+            $message .= "Akun portal relawan Anda siap digunakan.\n"
+                . "Username: " . $data['login_email'] . "\n";
+            if (!empty($data['temporary_password'])) {
+                $message .= "Password sementara: " . $data['temporary_password'] . "\n";
+            }
+            if (!empty($data['referral_code'])) {
+                $message .= "Kode referral: " . $data['referral_code'] . "\n";
+            }
+            $message .= "Silakan login melalui: " . url('login') . "\n";
+        }
         if ($contactWa !== '') {
             $message .= "Jika ada pertanyaan, silakan hubungi admin: " . wa_link($contactWa) . "\n";
         }
@@ -880,8 +976,8 @@ function send_mailketing_email($recipient, $subject, $content, $options = []) {
     if ($subject === '' || $content === '') return false;
 
     $apiToken = trim((string) setting('mailketing_api_token', ''));
-    $fromName = trim((string) ($options['from_name'] ?? setting('yayasan_short', setting('yayasan_name', APP_NAME))));
-    $fromEmail = trim((string) ($options['from_email'] ?? setting('yayasan_email', '')));
+    $fromName = trim((string) ($options['from_name'] ?? setting('mailketing_sender_name', setting('yayasan_short', setting('yayasan_name', APP_NAME)))));
+    $fromEmail = trim((string) ($options['from_email'] ?? setting('mailketing_sender_email', setting('yayasan_email', ''))));
     if ($apiToken === '' || $fromName === '' || $fromEmail === '' || !filter_var($fromEmail, FILTER_VALIDATE_EMAIL)) {
         return false;
     }

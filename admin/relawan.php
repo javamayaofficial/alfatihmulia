@@ -65,17 +65,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($leadStatuses[$status])) {
             DB::run("UPDATE volunteer_leads SET status=? WHERE id=?", 'si', [$status, $id]);
             audit('update_volunteer_lead', '#' . $id . ' -> ' . $status);
+            $accountProvision = null;
             if ($existing && ($existing['status'] ?? '') !== $status) {
+                if ($status === 'qualified') {
+                    $accountProvision = provision_volunteer_user_from_lead($existing);
+                    audit(
+                        'provision_volunteer_user',
+                        'Lead #' . $id . ' ' . (($accountProvision['ok'] ?? false) ? (($accountProvision['created'] ?? false) ? 'akun dibuat' : 'akun diperbarui') : ('gagal: ' . ($accountProvision['message'] ?? 'tidak diketahui')))
+                    );
+                }
                 $notified = notify_lead_status_update('volunteer', [
                     'name' => $existing['name'] ?? '',
                     'phone' => $existing['phone'] ?? '',
                     'email' => $existing['email'] ?? '',
                     'division' => $existing['division'] ?? '',
                     'status' => $status,
+                    'login_email' => $accountProvision['user']['email'] ?? '',
+                    'temporary_password' => $accountProvision['temporary_password'] ?? '',
+                    'referral_code' => $accountProvision['user']['referral_code'] ?? '',
                 ]);
                 audit('volunteer_status_notification', $notified ? ('Lead #' . $id . ' notifikasi status terkirim') : ('Lead #' . $id . ' notifikasi status tidak aktif / gagal'));
             }
-            flash_set('Status lead relawan diperbarui.');
+            if ($status === 'qualified' && is_array($accountProvision) && !($accountProvision['ok'] ?? false)) {
+                flash_set('Status lead relawan diperbarui, tetapi akun/login belum terkirim: ' . ($accountProvision['message'] ?? 'gagal membuat akun otomatis.'), 'err');
+            } elseif ($status === 'qualified' && is_array($accountProvision) && ($accountProvision['created'] ?? false)) {
+                flash_set('Status lead relawan diperbarui. Akun relawan baru berhasil dibuat dan kredensial telah dicoba dikirim.');
+            } elseif ($status === 'qualified' && is_array($accountProvision)) {
+                flash_set('Status lead relawan diperbarui. Akun relawan yang sudah ada diperbarui dan notifikasi login telah dicoba dikirim.');
+            } else {
+                flash_set('Status lead relawan diperbarui.');
+            }
         }
     }
     header('Location: ' . admin_url('relawan', $leadFilterQuery));
