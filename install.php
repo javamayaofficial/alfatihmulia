@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['do'] ?? '') === 'install')
                         'yayasan_short' => 'Al Fatih',
                         'yayasan_wa'    => $yWa,
                         'yayasan_email' => $adminEmail,
-                        'yayasan_visi'  => 'Menjadi platform filantropi Islam nasional yang transparan, profesional, amanah, dan berdampak bagi umat.',
+                        'yayasan_visi'  => 'Menjadi yayasan filantropi Islam yang transparan, profesional, amanah, dan bertumbuh sehat dalam melayani umat.',
                         'legal_akta'    => 'Akta Notaris Nomor 18 tanggal 11 Juni 2026 oleh BENNY NUR CHANIAGO, S.H., M.Kn.',
                         'legal_sk'      => 'Keputusan Menteri Hukum RI Nomor AHU-0014152.AH.01.04.Tahun 2026 tanggal 12 Juni 2026.',
                         'legal_struktur'=> 'Pembina: Riyandi. Pengawas: Cut Rossy Meutia. Pengurus: Yudha Eris Setiawan, Ari Cipta Robbi, dan Ichsan Nugraha.',
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['do'] ?? '') === 'install')
                         'payment_bank_primary_name' => 'BSI KCP Bandung',
                         'payment_bank_primary_number' => '7362699503',
                         'payment_bank_primary_holder' => 'Yayasan Alfatih Mulia',
-                        'umrah_target'  => '50000000',
+                        'umrah_target'  => '10000000',
                         'total_tersalurkan' => '0',
                     ];
                     $ss = $conn->prepare("INSERT INTO settings (skey,svalue) VALUES (?,?) ON DUPLICATE KEY UPDATE svalue=VALUES(svalue)");
@@ -95,20 +95,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['do'] ?? '') === 'install')
                     $st = $conn->prepare("INSERT INTO impact_stats (skey,label,svalue,icon,sort) VALUES (?,?,0,?,?) ON DUPLICATE KEY UPDATE label=VALUES(label)");
                     $i=0; foreach($stats as $s){ $st->bind_param('sssi',$s[0],$s[1],$s[2],$i); $st->execute(); $i++; } $st->close();
 
-                    // Seed contoh program
+                    // Seed program awal dengan angka yang lebih realistis
                     $prog = $conn->prepare("INSERT INTO programs (slug,title,category,excerpt,description,target_amount,beneficiaries,status) VALUES (?,?,?,?,?,?,?,'active')");
                     $samples = [
-                      ['sedekah-air-kehidupan','Sedekah Air Kehidupan','Air','Wujudkan sumber air bersih untuk saudara kita di daerah kekeringan.','Program pembangunan sumur dan sarana air bersih bagi masyarakat di wilayah yang kesulitan air. Setiap tetes adalah amal jariyah yang mengalir.',100000000,5000],
-                      ['rumah-quran','Rumah Quran Al Fatih','Pendidikan','Bangun generasi penghafal Quran melalui rumah tahfizh.','Mendukung operasional dan beasiswa santri di Rumah Quran binaan yayasan.',75000000,300],
-                      ['wakaf-produktif','Wakaf Produktif','Wakaf','Investasi akhirat yang manfaatnya terus mengalir.','Wakaf produktif yang dikelola amanah untuk membiayai program sosial & dakwah berkelanjutan.',200000000,10000],
+                      ['sedekah-air-kehidupan','Sedekah Air Kehidupan','Air','Wujudkan sumber air bersih untuk saudara kita di daerah kekeringan.','Program pembangunan sumur dan sarana air bersih bagi masyarakat di wilayah yang kesulitan air. Setiap tetes adalah amal jariyah yang mengalir.',25000000,80],
+                      ['rumah-quran','Rumah Quran Al Fatih','Pendidikan','Bangun generasi penghafal Quran melalui rumah tahfizh.','Mendukung operasional dan beasiswa santri di Rumah Quran binaan yayasan.',15000000,35],
+                      ['wakaf-produktif','Wakaf Produktif','Wakaf','Investasi akhirat yang manfaatnya terus mengalir.','Wakaf produktif yang dikelola amanah untuk membiayai program sosial & dakwah berkelanjutan.',30000000,120],
                     ];
                     foreach($samples as $p){ $prog->bind_param('sssssii',$p[0],$p[1],$p[2],$p[3],$p[4],$p[5],$p[6]); $prog->execute(); } $prog->close();
-
-                    // Seed testimoni & mitra contoh
-                    $conn->query("INSERT INTO testimonials (name,role,message) VALUES
-                      ('Bapak Ahmad','Donatur Rutin','Saya tenang berdonasi di sini karena laporannya transparan dan jelas.'),
-                      ('Siti Aminah','Relawan','Jadi relawan di sini membuat saya merasa kontribusi kecil pun sangat berarti.')");
-                    $conn->query("INSERT INTO partners (name,category) VALUES ('Masjid Al Fatih','Masjid Mitra'),('Pesantren Haramain','Pesantren Mitra')");
 
                     // Generate config.php
                     $tpl = file_get_contents($root . '/config.php');
@@ -247,7 +241,7 @@ input:focus{outline:0;border-color:#0B7A4B;box-shadow:0 0 0 3px rgba(11,122,75,.
     </div>
 
     <button class="btn" type="submit" <?= !$allOk?'disabled style=opacity:.5':'' ?>>🚀 Jalankan Instalasi</button>
-    <p class="note">Installer akan membuat tabel, akun admin, dan data contoh secara otomatis.</p>
+    <p class="note">Installer akan membuat tabel, akun admin, dan data awal dasar dengan angka yang lebih realistis untuk program yang baru mulai.</p>
   </form>
 <?php endif; ?>
 

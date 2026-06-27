@@ -1,13 +1,13 @@
 <?php
 if (!defined('APP_NAME')) { exit; }
 $board = leaderboard(50);
-$target = (int) setting('umrah_target', '50000000'); // target dana untuk reward umrah
+$target = (int) setting('umrah_target', '10000000'); // target dana untuk reward relawan tahap awal
 layout_header('Leaderboard Relawan');
 ?>
 <section class="page-head gold-head"><div class="container">
-  <span class="pill pill-gold">Papan Peringkat Nasional</span>
+  <span class="pill pill-gold">Papan Peringkat Relawan</span>
   <h1>Leaderboard Duta Air Kehidupan</h1>
-  <p class="muted">Para pahlawan kebaikan yang menggerakkan perubahan.</p>
+  <p class="muted">Perkembangan kontribusi relawan yang sudah tercatat secara nyata di sistem.</p>
 </div></section>
 
 <section class="section"><div class="container narrow">
@@ -25,7 +25,7 @@ layout_header('Leaderboard Relawan');
           <b><?= e($b['name']) ?></b>
           <span class="muted"><?= number_format($b['jml_donasi']) ?> donasi dibawa</span>
           <div class="progress mini"><span style="width:<?= $pct ?>%"></span></div>
-          <small class="muted"><?= $pct ?>% menuju The Legacy Umrah</small>
+          <small class="muted"><?= $pct ?>% menuju target reward relawan</small>
         </div>
         <div class="board-total"><?= rupiah($b['total']) ?></div>
       </div>

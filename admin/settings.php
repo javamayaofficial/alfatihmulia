@@ -468,7 +468,7 @@ $renderSecretInput = function ($name, $value, $placeholder = '', $formId = '') {
         <small class="secret-hint">Kosongkan bila ingin mengikuti rekening utama pada panel pembayaran manual.</small>
       </div>
       <div><label>Struktur Organisasi</label><input form="<?= e($bulkFormId) ?>" type="text" name="legal_struktur" value="<?= e(setting('legal_struktur', 'Pembina: Riyandi. Pengawas: Cut Rossy Meutia. Pengurus: Yudha Eris Setiawan, Ari Cipta Robbi, dan Ichsan Nugraha.')) ?>" placeholder="Keterangan singkat struktur organisasi"></div>
-      <div><label>Target Dana Reward Umrah (Rp)</label><input form="<?= e($bulkFormId) ?>" type="text" name="umrah_target" inputmode="numeric" value="<?= e(setting('umrah_target','50000000')) ?>"></div>
+      <div><label>Target Dana Reward Relawan (Rp)</label><input form="<?= e($bulkFormId) ?>" type="text" name="umrah_target" inputmode="numeric" value="<?= e(setting('umrah_target','10000000')) ?>"></div>
       <div><label>Link Google Maps</label><input form="<?= e($bulkFormId) ?>" type="text" name="google_maps_link" value="<?= e(setting('google_maps_link')) ?>" placeholder="https://maps.google.com/..."></div>
       <div><label>Instagram</label><input form="<?= e($bulkFormId) ?>" type="text" name="social_instagram" value="<?= e(setting('social_instagram')) ?>" placeholder="@yayasan"></div>
       <div><label>Facebook</label><input form="<?= e($bulkFormId) ?>" type="text" name="social_facebook" value="<?= e(setting('social_facebook')) ?>" placeholder="Halaman Facebook Yayasan"></div>

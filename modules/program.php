@@ -96,11 +96,11 @@ layout_header('Program');
 <section class="section section-soft">
   <div class="container">
     <div class="section-head">
-      <h2>Gerakan Relawan Nasional</h2>
-      <p class="muted">Relawan menjadi penghubung penting dalam edukasi publik, kampanye program, dan penguatan jaringan manfaat.</p>
+      <h2>Gerakan Relawan Yayasan</h2>
+      <p class="muted">Relawan menjadi penghubung penting dalam edukasi publik, kampanye program, dan penguatan jaringan manfaat yang sedang bertumbuh.</p>
     </div>
     <div class="cta-inline">
-      <p class="muted">Bergabunglah sebagai bagian dari gerakan nasional Duta Kebaikan Indonesia dan bantu perluas jangkauan program yayasan.</p>
+      <p class="muted">Bergabunglah sebagai relawan awal dan bantu yayasan memperluas jangkauan program secara bertahap, rapi, dan amanah.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="<?= url('relawan') ?>">Daftar Relawan</a>
         <a class="btn btn-outline" href="<?= url('leaderboard') ?>">Lihat Leaderboard</a>

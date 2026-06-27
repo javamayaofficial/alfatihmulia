@@ -8,6 +8,9 @@ $partners = DB::all("SELECT * FROM partners ORDER BY id DESC LIMIT 12");
 
 $manualBeneficiaries = isset($im['manual']['penerima_manfaat']) ? (int) $im['manual']['penerima_manfaat']['value'] : 0;
 $beneficiaries = max($manualBeneficiaries, (int) $im['derived']['penerima_manfaat_program']);
+$donorDisplay = number_format((int) $im['derived']['total_donatur']) . ((int) $im['derived']['total_donatur'] > 0 ? '+' : '');
+$relawanDisplay = number_format((int) $im['derived']['total_relawan']) . ((int) $im['derived']['total_relawan'] > 0 ? '+' : '');
+$beneficiaryDisplay = number_format((int) $beneficiaries) . ((int) $beneficiaries > 0 ? '+' : '');
 $flagshipPrograms = [
     [
         'name' => 'Duta Jejak Baitullah Indonesia',
@@ -39,18 +42,18 @@ layout_header('Home');
         <a class="btn btn-outline btn-lg" href="<?= url('relawan') ?>">Menjadi Relawan</a>
       </div>
       <div class="hero-trust">
-        <div><strong><?= number_format($im['derived']['total_donatur']) ?>+</strong><span>Total Donatur</span></div>
-        <div><strong><?= number_format($im['derived']['total_relawan']) ?>+</strong><span>Total Relawan</span></div>
-        <div><strong><?= number_format($beneficiaries) ?>+</strong><span>Penerima Manfaat</span></div>
+        <div><strong><?= $donorDisplay ?></strong><span>Total Donatur</span></div>
+        <div><strong><?= $relawanDisplay ?></strong><span>Total Relawan</span></div>
+        <div><strong><?= $beneficiaryDisplay ?></strong><span>Penerima Manfaat</span></div>
       </div>
     </div>
     <div class="hero-panel card">
       <span class="pill pill-soft">Komitmen Amanah</span>
-      <h3>Program Nasional Untuk Dampak Berkelanjutan</h3>
+      <h3>Program Prioritas Untuk Dampak Bertahap</h3>
       <ul class="check-list">
         <li>Donasi mudah melalui transfer bank, QRIS, dan virtual account</li>
         <li>Laporan penyaluran dana yang terbuka dan terukur</li>
-        <li>Gerakan relawan nasional untuk memperluas jangkauan manfaat</li>
+        <li>Penguatan relawan dan kolaborasi secara bertahap sesuai pertumbuhan program</li>
       </ul>
       <a class="btn btn-ghost btn-block" href="<?= url('laporan') ?>">Lihat Laporan Transparansi</a>
     </div>
@@ -60,8 +63,8 @@ layout_header('Home');
 <section class="section">
   <div class="container">
     <div class="section-head">
-      <h2>Impact Counter</h2>
-      <p class="muted">Angka-angka utama ini merangkum pertumbuhan kepercayaan publik dan jangkauan manfaat program yayasan.</p>
+      <h2>Data Perkembangan Saat Ini</h2>
+      <p class="muted">Angka-angka berikut menampilkan capaian yang sudah benar-benar tercatat saat ini, sehingga tetap jujur meski program masih bertumbuh.</p>
     </div>
     <div class="stats-grid impact-counter-grid">
       <div class="stat-card"><span class="stat-ic">🤲</span><b class="counter" data-target="<?= $im['derived']['total_donatur'] ?>">0</b><span>Total Donatur</span></div>
@@ -174,7 +177,7 @@ layout_header('Home');
     <div>
       <span class="pill pill-gold">Gerakan Relawan Nasional</span>
       <h2>Bersama Donatur dan Relawan, Luaskan Jangkauan Kebaikan</h2>
-      <p>Gabungkan energi donatur, relawan, dan mitra kolaborasi dalam gerakan nasional Duta Kebaikan Indonesia untuk menjangkau lebih banyak titik manfaat.</p>
+      <p>Gabungkan energi donatur, relawan, dan mitra kolaborasi untuk membangun gerakan kebaikan yang bertumbuh sehat sejak tahap awal.</p>
       <a class="btn btn-primary" href="<?= url('relawan') ?>">Daftar Relawan</a>
       <a class="btn btn-ghost" href="<?= url('kemitraan') ?>">Ajukan Kemitraan</a>
     </div>

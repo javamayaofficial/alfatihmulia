@@ -60,13 +60,13 @@ layout_header('Relawan');
 <section class="page-head gold-head"><div class="container">
   <span class="pill pill-gold">Relawan</span>
   <h1>Open Recruitment Relawan</h1>
-  <p class="muted">Bergabunglah dalam Gerakan Relawan Nasional untuk memperluas manfaat program Duta Kebaikan Indonesia.</p>
+  <p class="muted">Bergabunglah sebagai relawan awal yang membantu yayasan membangun gerakan kebaikan secara bertahap dan terarah.</p>
 </div></section>
 
 <section class="section"><div class="container two-col">
   <div class="benefits">
     <h3>Mengapa Bergabung Menjadi Relawan?</h3>
-    <div class="benefit"><span>🌍</span><div><b>Jangkauan Nasional</b><p class="muted">Ambil bagian dalam gerakan sosial yang menjangkau banyak daerah dan kebutuhan umat.</p></div></div>
+    <div class="benefit"><span>🌍</span><div><b>Jangkauan Bertahap</b><p class="muted">Ambil bagian dalam gerakan sosial yang sedang tumbuh dan diarahkan agar manfaatnya makin luas dari waktu ke waktu.</p></div></div>
     <div class="benefit"><span>🤝</span><div><b>Kolaborasi Tim</b><p class="muted">Bergerak bersama tim yayasan, donatur, dan mitra untuk eksekusi program yang lebih kuat.</p></div></div>
     <div class="benefit"><span>📚</span><div><b>Penguatan Kapasitas</b><p class="muted">Relawan mendapatkan ruang belajar, keterlibatan program, dan pengalaman kontribusi yang terarah.</p></div></div>
     <div class="benefit"><span>🕌</span><div><b>Amal Jariyah Berkelanjutan</b><p class="muted">Setiap aksi relawan menjadi bagian dari jejak kebaikan yang memperluas manfaat program yayasan.</p></div></div>
