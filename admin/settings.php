@@ -660,7 +660,7 @@ $renderSecretInput = function ($name, $value, $placeholder = '', $formId = '') {
 
 <div class="panel">
   <div class="panel-head"><h3>Statistik Dampak Manual</h3></div>
-  <p class="muted">Counter yang tidak terderivasi otomatis (mis. Titik Air, Pesantren Binaan, Penerima Manfaat). Tampil di Dashboard Dampak.</p>
+  <p class="muted">Counter yang tidak terderivasi otomatis (mis. Titik Air, Pesantren Binaan, Penerima Manfaat). Nilai `Penerima Manfaat` di sini dipakai langsung pada beranda dan Dashboard Dampak.</p>
   <div class="form settings-bulk-section">
     <div id="statRows">
       <?php

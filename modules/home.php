@@ -6,8 +6,10 @@ $articles = DB::all("SELECT * FROM articles WHERE status='published' ORDER BY cr
 $testi    = DB::all("SELECT * FROM testimonials ORDER BY created_at DESC LIMIT 6");
 $partners = DB::all("SELECT * FROM partners ORDER BY id DESC LIMIT 12");
 
-$manualBeneficiaries = isset($im['manual']['penerima_manfaat']) ? (int) $im['manual']['penerima_manfaat']['value'] : 0;
-$beneficiaries = max($manualBeneficiaries, (int) $im['derived']['penerima_manfaat_program']);
+$hasManualBeneficiaries = isset($im['manual']['penerima_manfaat']);
+$beneficiaries = $hasManualBeneficiaries
+    ? (int) $im['manual']['penerima_manfaat']['value']
+    : (int) $im['derived']['penerima_manfaat_program'];
 $donorDisplay = number_format((int) $im['derived']['total_donatur']) . ((int) $im['derived']['total_donatur'] > 0 ? '+' : '');
 $relawanDisplay = number_format((int) $im['derived']['total_relawan']) . ((int) $im['derived']['total_relawan'] > 0 ? '+' : '');
 $beneficiaryDisplay = number_format((int) $beneficiaries) . ((int) $beneficiaries > 0 ? '+' : '');

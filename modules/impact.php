@@ -12,7 +12,7 @@ layout_header('Dashboard Dampak');
 <section class="page-head impact-head"><div class="container">
   <span class="pill">Transparansi Real-Time</span>
   <h1>Dashboard Dampak</h1>
-  <p class="muted">Setiap angka di halaman ini ditarik langsung dari data donasi yang telah diverifikasi. Inilah komitmen amanah kami.</p>
+  <p class="muted">Sebagian angka di halaman ini ditarik dari data terverifikasi, dan sebagian lain berasal dari rekap manual yayasan agar pelaporan dampak tetap relevan dengan kondisi lapangan.</p>
 </div></section>
 
 <section class="section"><div class="container">

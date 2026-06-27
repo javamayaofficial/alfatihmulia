@@ -9,6 +9,16 @@ $articlesPublished = (int) DB::val("SELECT COUNT(*) FROM articles WHERE status='
 $galleryPublished = (int) DB::val("SELECT COUNT(*) FROM media_gallery WHERE status='published'");
 $partnersTotal = (int) DB::val("SELECT COUNT(*) FROM partners");
 $orgPublished = (int) DB::val("SELECT COUNT(*) FROM organization_members WHERE status='published'");
+$programBeneficiaries = (int) ($im['derived']['penerima_manfaat_program'] ?? 0);
+$manualBeneficiaries = 0;
+foreach ($im['manual'] as $manualStat) {
+    if (($manualStat['label'] ?? '') === 'Penerima Manfaat') {
+        $manualBeneficiaries = (int) ($manualStat['value'] ?? 0);
+        break;
+    }
+}
+$beneficiaryDifference = $manualBeneficiaries - $programBeneficiaries;
+$beneficiarySynced = $beneficiaryDifference === 0;
 $docsConfigured = 0;
 foreach ([
     'legal_akta_file',
@@ -46,6 +56,45 @@ flash_show();
   <div class="stat-card"><span class="stat-ic">🏛️</span><b><?= number_format($orgPublished) ?></b><span>Struktur Publish</span></div>
   <div class="stat-card"><span class="stat-ic">📄</span><b><?= number_format($docsConfigured) ?>/7</b><span>Dokumen Publik Siap</span></div>
   <div class="stat-card"><span class="stat-ic">📋</span><b><?= number_format($im['derived']['program_aktif']) ?></b><span>Program Aktif</span></div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><h3>Penerima Manfaat Manual</h3><a class="btn btn-ghost btn-sm" href="<?= admin_url('settings') ?>">Buka Pengaturan</a></div>
+  <div class="mini-feed">
+    <div class="feed-item">
+      <div>
+        <b><?= number_format($manualBeneficiaries) ?></b>
+        <span class="muted">Angka ini dipakai pada beranda dan dashboard dampak sebagai statistik publik `Penerima Manfaat`.</span>
+      </div>
+      <div class="feed-meta"><span class="badge badge-verified">Manual</span></div>
+    </div>
+    <div class="feed-item">
+      <div>
+        <b><?= number_format($programBeneficiaries) ?></b>
+        <span class="muted">Total teknis yang dihitung dari seluruh field `Penerima Manfaat` di data program.</span>
+      </div>
+      <div class="feed-meta"><span class="badge badge-pending">Program</span></div>
+    </div>
+    <div class="feed-item">
+      <div>
+        <b><?= $beneficiarySynced ? 'Sudah Sinkron' : ('Selisih ' . number_format(abs($beneficiaryDifference))) ?></b>
+        <span class="muted">
+          <?= $beneficiarySynced
+              ? 'Angka manual dan total program sudah sama.'
+              : ($beneficiaryDifference > 0
+                  ? 'Angka manual lebih besar dari total program. Ini cocok jika sebagian dampak belum dipecah per program.'
+                  : 'Angka manual lebih kecil dari total program. Sebaiknya cek ulang agar statistik publik tidak tertinggal.'); ?>
+        </span>
+      </div>
+      <div class="feed-meta"><span class="badge badge-<?= $beneficiarySynced ? 'verified' : 'pending' ?>"><?= $beneficiarySynced ? 'Sinkron' : 'Cek' ?></span></div>
+    </div>
+    <div class="feed-item">
+      <div>
+        <b>Lokasi Input</b>
+        <span class="muted">Panel Admin → Pengaturan → Statistik Dampak Manual → baris `Penerima Manfaat`.</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <?php if ($pending > 0): ?>
