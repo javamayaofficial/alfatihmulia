@@ -26,7 +26,7 @@ function admin_layout_header($active = 'dashboard', $title = '') {
 <link rel="stylesheet" href="<?= asset('css/style.css') ?>">
 </head><body class="admin-body">
 <aside class="sidebar" id="sidebar">
-  <div class="side-brand"><span class="brand-mark">﷽</span><b>AIP Admin</b></div>
+  <div class="side-brand"><?= render_brand_mark('brand-mark', setting('yayasan_short', 'Al Fatih') . ' Logo') ?><b><?= e(setting('yayasan_short', 'Al Fatih')) ?> Admin</b></div>
   <nav class="side-nav">
     <?php foreach ($menu as $key=>$m): if(!in_array($role,$m[2],true)) continue; ?>
       <a href="<?= admin_url($key) ?>" class="<?= $active===$key?'active':'' ?>"><span><?= $m[0] ?></span><?= e($m[1]) ?></a>

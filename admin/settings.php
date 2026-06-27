@@ -61,6 +61,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 set_setting($field, $upload['url']);
             }
         }
+        $logoUpload = upload_asset_image('yayasan_logo_file', 'yayasan-logo');
+        if (!$logoUpload['ok']) {
+            flash_set($logoUpload['message'], 'err');
+            header('Location: '.admin_url('settings')); exit;
+        }
+        if (!empty($logoUpload['file'])) {
+            $oldLogo = trim((string) setting('yayasan_logo', ''));
+            set_setting('yayasan_logo', $logoUpload['file']);
+            if ($oldLogo !== '' && $oldLogo !== $logoUpload['file']) {
+                delete_asset_image_if_unused($oldLogo);
+            }
+        }
         audit('update_profil','Profil yayasan diperbarui');
         flash_set('Profil yayasan disimpan.');
     } elseif ($act === 'api') {
@@ -196,6 +208,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             flash_set('Dokumen belum tersedia untuk dihapus.', 'err');
         }
+    } elseif ($act === 'remove_yayasan_logo') {
+        $currentLogo = trim((string) setting('yayasan_logo', ''));
+        if ($currentLogo !== '') {
+            set_setting('yayasan_logo', '');
+            delete_asset_image_if_unused($currentLogo);
+            audit('remove_yayasan_logo', 'Logo yayasan dihapus');
+            flash_set('Logo yayasan dihapus.');
+        } else {
+            flash_set('Logo yayasan belum tersedia.', 'err');
+        }
     }
     header('Location: '.admin_url('settings')); exit;
 }
@@ -216,6 +238,7 @@ $duitkuActive = feature_active('duitku_merchant_code') && feature_active('duitku
 $mailketingActive = feature_active('mailketing_api_token') && feature_active('mailketing_list_id');
 $duitkuWebhook = BASE_URL . '/api/webhook-duitku.php';
 $duitkuModeLabel = setting('duitku_is_production', '0') === '1' ? 'Production' : 'Sandbox';
+$currentLogo = trim((string) setting('yayasan_logo', ''));
 admin_layout_header('settings', 'Pengaturan');
 flash_show();
 $renderDocPreview = function ($settingKey, $title) {
@@ -378,6 +401,38 @@ $renderSecretInput = function ($name, $value, $placeholder = '') {
       <div><label>Instagram</label><input type="text" name="social_instagram" value="<?= e(setting('social_instagram')) ?>" placeholder="@yayasan"></div>
       <div><label>Facebook</label><input type="text" name="social_facebook" value="<?= e(setting('social_facebook')) ?>" placeholder="Halaman Facebook Yayasan"></div>
       <div><label>YouTube</label><input type="text" name="social_youtube" value="<?= e(setting('social_youtube')) ?>" placeholder="Channel YouTube Yayasan"></div>
+    </div>
+    <div class="grid-2">
+      <div>
+        <label>Upload Logo Yayasan</label><input type="file" name="yayasan_logo_file" accept=".jpg,.jpeg,.png,.webp,.gif,.svg">
+        <small class="secret-hint">Gunakan logo PNG/WebP transparan agar tampil lebih rapi di header desktop maupun layar HP.</small>
+        <?php if ($currentLogo): ?>
+        <div class="upload-preview upload-preview-logo">
+          <img src="<?= e(asset('img/' . $currentLogo)) ?>" alt="Logo Yayasan">
+          <div class="upload-meta">
+            <b>Logo Yayasan Aktif</b>
+            <span class="muted"><?= e($currentLogo) ?></span>
+          </div>
+        </div>
+        <?php endif; ?>
+      </div>
+      <div class="card">
+        <h3>Catatan Logo</h3>
+        <ul class="mini-list compact">
+          <li>Logo otomatis tampil di header, footer, panel admin, halaman login, dan register.</li>
+          <li>Desain disiapkan agar tetap proporsional di desktop dan HP.</li>
+          <li>Simpan profil setelah memilih file logo baru.</li>
+        </ul>
+        <?php if ($currentLogo): ?>
+        <div class="inline-actions">
+          <form method="post" onsubmit="return confirm('Hapus logo yayasan ini?')">
+            <?= csrf_field() ?>
+            <input type="hidden" name="act" value="remove_yayasan_logo">
+            <button class="btn btn-ghost btn-sm">Hapus Logo</button>
+          </form>
+        </div>
+        <?php endif; ?>
+      </div>
     </div>
     <div class="grid-2">
       <div>

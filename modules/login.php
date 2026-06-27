@@ -18,7 +18,7 @@ layout_header('Masuk');
 ?>
 <section class="section auth-section"><div class="container narrow">
   <div class="card form-card auth-card">
-    <div class="auth-head"><span class="brand-mark big">﷽</span><h1>Masuk ke Akun</h1><p class="muted">Portal Donatur & Relawan</p></div>
+    <div class="auth-head"><?= render_brand_mark('brand-mark big', setting('yayasan_short', 'Al Fatih') . ' Logo') ?><h1>Masuk ke Akun</h1><p class="muted">Portal Donatur & Relawan</p></div>
     <?php if ($errors): ?><div class="alert alert-err"><?php foreach($errors as $er) echo '<div>• '.e($er).'</div>'; ?></div><?php endif; ?>
     <form method="post" class="form">
       <?= csrf_field() ?>

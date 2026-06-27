@@ -24,7 +24,7 @@ layout_header('Daftar Donatur');
 ?>
 <section class="section auth-section"><div class="container narrow">
   <div class="card form-card auth-card">
-    <div class="auth-head"><span class="brand-mark big">﷽</span><h1>Daftar Akun Donatur</h1><p class="muted">Pantau riwayat & dampak donasi Anda.</p></div>
+    <div class="auth-head"><?= render_brand_mark('brand-mark big', setting('yayasan_short', 'Al Fatih') . ' Logo') ?><h1>Daftar Akun Donatur</h1><p class="muted">Pantau riwayat & dampak donasi Anda.</p></div>
     <?php if($errors): ?><div class="alert alert-err"><?php foreach($errors as $er) echo '<div>• '.e($er).'</div>'; ?></div><?php endif; ?>
     <form method="post" class="form">
       <?= csrf_field() ?>

@@ -20,6 +20,24 @@ function asset($path) { return BASE_URL . '/assets/' . ltrim($path, '/'); }
 /** Escape output HTML (anti-XSS) */
 function e($str) { return htmlspecialchars((string)$str, ENT_QUOTES, 'UTF-8'); }
 
+function yayasan_logo_file() {
+    return trim((string) setting('yayasan_logo', ''));
+}
+
+function yayasan_logo_url() {
+    $file = yayasan_logo_file();
+    return $file !== '' ? asset('img/' . $file) : '';
+}
+
+function render_brand_mark($class = 'brand-mark', $alt = 'Logo Yayasan') {
+    $class = trim((string) preg_replace('/[^a-z0-9 _-]/i', '', $class));
+    $logoUrl = yayasan_logo_url();
+    if ($logoUrl !== '') {
+        return '<span class="' . e(trim($class . ' brand-has-logo')) . '"><img class="brand-logo-img" src="' . e($logoUrl) . '" alt="' . e($alt) . '"></span>';
+    }
+    return '<span class="' . e($class) . '">﷽</span>';
+}
+
 /** Format Rupiah */
 function rupiah($n) { return 'Rp ' . number_format((float)$n, 0, ',', '.'); }
 

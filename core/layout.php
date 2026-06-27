@@ -20,7 +20,7 @@ function layout_header($title = '', $desc = '') {
 <header class="nav">
   <div class="container nav-inner">
     <a class="brand" href="<?= url('home') ?>">
-      <span class="brand-mark">﷽</span>
+      <?= render_brand_mark('brand-mark', setting('yayasan_short','Al Fatih') . ' Logo') ?>
       <span class="brand-text"><?= e(setting('yayasan_short','Al Fatih')) ?><small>Yayasan Amanah Nasional</small></span>
     </a>
     <button class="nav-toggle" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
@@ -57,7 +57,7 @@ function layout_footer() {
 <footer class="footer">
   <div class="container footer-grid">
     <div>
-      <div class="brand brand-foot"><span class="brand-mark">﷽</span><span class="brand-text"><?= e(setting('yayasan_short','Al Fatih')) ?><small>Yayasan Amanah Nasional</small></span></div>
+      <div class="brand brand-foot"><?= render_brand_mark('brand-mark', setting('yayasan_short','Al Fatih') . ' Logo') ?><span class="brand-text"><?= e(setting('yayasan_short','Al Fatih')) ?><small>Yayasan Amanah Nasional</small></span></div>
       <p class="muted"><?= e($yname) ?>. Menjadi perantara kebaikan dan pahala jariyah untuk umat melalui program yang amanah, terukur, dan berkelanjutan.</p>
     </div>
     <div>
