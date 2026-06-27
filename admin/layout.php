@@ -48,6 +48,18 @@ function admin_layout_footer() {
     ?></div></div><script src="<?= asset('js/app.js') ?>"></script></body></html><?php
 }
 
-function flash_set($msg, $type='ok'){ if(session_status()===PHP_SESSION_NONE)session_start(); $_SESSION['flash']=['m'=>$msg,'t'=>$type]; }
-function flash_show(){ if(!empty($_SESSION['flash'])){ $f=$_SESSION['flash']; unset($_SESSION['flash']);
-  echo '<div class="alert alert-'.($f['t']==='ok'?'ok':'err').'">'.e($f['m']).'</div>'; } }
+function flash_set($msg, $type='ok', $meta=[]){
+    if(session_status()===PHP_SESSION_NONE)session_start();
+    $_SESSION['flash'] = array_merge(['m' => $msg, 't' => $type], is_array($meta) ? $meta : []);
+}
+function flash_show(){
+    if(!empty($_SESSION['flash'])){
+        $f = $_SESSION['flash'];
+        unset($_SESSION['flash']);
+        $attrs = '';
+        if (!empty($f['sound'])) {
+            $attrs .= ' data-sound="' . e((string) $f['sound']) . '"';
+        }
+        echo '<div class="alert alert-'.($f['t']==='ok'?'ok':'err').'"' . $attrs . '>'.e($f['m']).'</div>';
+    }
+}

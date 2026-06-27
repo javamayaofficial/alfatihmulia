@@ -57,6 +57,45 @@
     });
   }
 
+  // ---- Bunyi sukses admin ----
+  var successAlert = document.querySelector('.alert-ok[data-sound="save-success"]');
+  if(successAlert){
+    var playSuccessTone = function(){
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if(!AudioCtx) return;
+      try {
+        var ctx = new AudioCtx();
+        var now = ctx.currentTime;
+        var master = ctx.createGain();
+        master.gain.setValueAtTime(0.0001, now);
+        master.gain.exponentialRampToValueAtTime(0.12, now + 0.02);
+        master.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
+        master.connect(ctx.destination);
+
+        [880, 1174].forEach(function(freq, index){
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          var startAt = now + (index * 0.08);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, startAt);
+          gain.gain.setValueAtTime(0.0001, startAt);
+          gain.gain.exponentialRampToValueAtTime(0.3, startAt + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.18);
+          osc.connect(gain);
+          gain.connect(master);
+          osc.start(startAt);
+          osc.stop(startAt + 0.2);
+        });
+
+        window.setTimeout(function(){
+          if(typeof ctx.close === 'function') ctx.close();
+        }, 500);
+      } catch(e){}
+    };
+
+    window.setTimeout(playSuccessTone, 120);
+  }
+
   // ---- Counter animasi ----
   function animateCounter(el){
     var target = parseFloat(el.getAttribute('data-target')) || 0;
