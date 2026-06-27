@@ -164,7 +164,7 @@ flash_show();
       </select>
       <label>Nama File Logo (opsional)</label><input type="text" name="logo" value="<?= e($edit['logo'] ?? '') ?>" placeholder="Contoh: logo-mitra.png">
       <label>Upload Logo</label><input type="file" name="logo_file" accept=".webp">
-      <small class="secret-hint">Gunakan logo horizontal <b>WebP transparan</b>. Rekomendasi terbaik <b>1000 x 400 px</b>, alternatif aman <b>900 x 360 px</b> atau <b>800 x 320 px</b>.</small>
+      <small class="secret-hint">Gunakan logo <b>kotak WebP transparan</b>. Rekomendasi terbaik <b>1000 x 1000 px</b>, alternatif aman <b>800 x 800 px</b> atau <b>600 x 600 px</b>.</small>
       <?php if (!empty($edit['logo'])): ?>
       <div class="upload-preview">
         <img src="<?= e(asset('img/' . $edit['logo'])) ?>" alt="<?= e($edit['name'] ?? 'Preview logo mitra') ?>">
@@ -185,7 +185,7 @@ flash_show();
       <button class="btn btn-primary btn-block"><?= $edit ? 'Simpan Perubahan' : 'Tambah Mitra' ?></button>
       <?php if ($edit): ?><a class="btn btn-ghost btn-block" href="<?= admin_url('mitra') ?>">Batal</a><?php endif; ?>
     </form>
-    <p class="note">Saat logo diganti atau dihapus, sistem akan mencoba membersihkan file lama jika sudah tidak dipakai konten lain. Format yang diwajibkan adalah <b>WebP</b>. Hindari logo kotak kecil; untuk daftar mitra hasil terbaik biasanya datang dari file horizontal transparan sekitar <b>1000 x 400 px</b>.</p>
+    <p class="note">Saat logo diganti atau dihapus, sistem akan mencoba membersihkan file lama jika sudah tidak dipakai konten lain. Format yang diwajibkan adalah <b>WebP</b> dengan rasio <b>1:1</b> agar tampilan daftar mitra lebih konsisten dan rapi.</p>
   </div>
 
   <div class="panel">
