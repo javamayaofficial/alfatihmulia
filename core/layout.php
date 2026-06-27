@@ -3,7 +3,6 @@ if (!defined('APP_NAME')) { http_response_code(403); exit('Akses ditolak.'); }
 
 function layout_header($title = '', $desc = '') {
     $yname = setting('yayasan_name', 'Yayasan Al Fatih Mulia Haramain');
-    $hasUploadedLogo = yayasan_logo_url() !== '';
     $pageTitle = $title ? ($title . ' — ' . $yname) : $yname;
     $desc = $desc ?: 'Melayani Umat, Membangun Peradaban. Donasi, relawan, dan dampak nyata dalam satu platform amanah.';
     ?><!DOCTYPE html>
@@ -20,11 +19,8 @@ function layout_header($title = '', $desc = '') {
 <body>
 <header class="nav">
   <div class="container nav-inner">
-    <a class="brand <?= $hasUploadedLogo ? 'brand-logo-only' : '' ?>" href="<?= url('home') ?>" aria-label="<?= e($yname) ?>">
+    <a class="brand brand-logo-only" href="<?= url('home') ?>" aria-label="<?= e($yname) ?>">
       <?= render_brand_mark('brand-mark', setting('yayasan_short','Al Fatih') . ' Logo') ?>
-      <?php if (!$hasUploadedLogo): ?>
-      <span class="brand-text"><?= e(setting('yayasan_short','Al Fatih')) ?><small>Yayasan Amanah Nasional</small></span>
-      <?php endif; ?>
     </a>
     <button class="nav-toggle" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
     <nav class="nav-links">
