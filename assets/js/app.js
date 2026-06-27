@@ -6,6 +6,8 @@
   var body = document.body;
   var navToggle = document.querySelector('.nav-toggle');
   var dropdownItems = document.querySelectorAll('.nav-item-dropdown');
+  var quickFloat = document.querySelector('.quick-float');
+  var quickFloatToggle = document.getElementById('quickFloatToggle');
 
   dropdownItems.forEach(function(item){
     var trigger = item.querySelector('.nav-dropdown-toggle');
@@ -32,6 +34,10 @@
         if(trigger) trigger.setAttribute('aria-expanded', 'false');
       });
     }
+    if(quickFloat && !ev.target.closest('.quick-float')) {
+      quickFloat.classList.remove('open');
+      if(quickFloatToggle) quickFloatToggle.setAttribute('aria-expanded', 'false');
+    }
     if(window.innerWidth <= 860 && body.classList.contains('nav-open') && ev.target.closest('.nav-links a')) {
       body.classList.remove('nav-open');
       if(navToggle) navToggle.setAttribute('aria-expanded', 'false');
@@ -41,6 +47,13 @@
   if(navToggle){
     navToggle.addEventListener('click', function(){
       navToggle.setAttribute('aria-expanded', String(body.classList.contains('nav-open')));
+    });
+  }
+
+  if(quickFloat && quickFloatToggle){
+    quickFloatToggle.addEventListener('click', function(){
+      var isOpen = quickFloat.classList.toggle('open');
+      quickFloatToggle.setAttribute('aria-expanded', String(isOpen));
     });
   }
 

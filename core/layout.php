@@ -129,9 +129,15 @@ function layout_footer() {
   </div>
 </footer>
 <div class="quick-float">
-  <a class="quick-float-item quick-float-donate" href="<?= url('donasi') ?>">Donasi Sekarang</a>
-  <?php if ($wa): ?><a class="quick-float-item quick-float-wa" href="<?= e(wa_link($wa, 'Assalamualaikum, saya ingin terhubung dengan admin yayasan.')) ?>" target="_blank" rel="noopener">WhatsApp Admin</a><?php endif; ?>
-  <a class="quick-float-item quick-float-volunteer" href="<?= url('relawan') ?>">Daftar Relawan</a>
+  <div class="quick-float-panel" id="quickFloatPanel">
+    <a class="quick-float-item quick-float-donate" href="<?= url('donasi') ?>">Donasi Sekarang</a>
+    <?php if ($wa): ?><a class="quick-float-item quick-float-wa" href="<?= e(wa_link($wa, 'Assalamualaikum, saya ingin terhubung dengan admin yayasan.')) ?>" target="_blank" rel="noopener">WhatsApp Admin</a><?php endif; ?>
+    <a class="quick-float-item quick-float-volunteer" href="<?= url('relawan') ?>">Daftar Relawan</a>
+  </div>
+  <button class="quick-float-toggle" type="button" id="quickFloatToggle" aria-expanded="false" aria-controls="quickFloatPanel">
+    <span class="quick-float-toggle-icon">+</span>
+    <span>Hubungi Kami</span>
+  </button>
 </div>
 <script src="<?= asset('js/app.js') ?>"></script>
 </body>
