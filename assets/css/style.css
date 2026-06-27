@@ -51,14 +51,14 @@ code{background:var(--soft2);padding:2px 6px;border-radius:6px;font-size:.86em}
   position:relative;display:flex;align-items:center;justify-content:center;
   width:100%;height:100%;padding:8px 12px;border-radius:18px;overflow:hidden;
   background:
-    radial-gradient(circle at top left,rgba(255,255,255,.52),transparent 42%),
-    linear-gradient(135deg,rgba(248,246,241,.98),rgba(230,211,163,.92));
-  border:1px solid rgba(102,87,52,.22);
-  box-shadow:0 10px 22px rgba(4,14,12,.10), inset 0 1px 0 rgba(255,255,255,.55);
+    radial-gradient(circle at top left,rgba(200,168,90,.18),transparent 42%),
+    linear-gradient(135deg,rgba(14,27,20,.98),rgba(4,14,12,.96));
+  border:1px solid rgba(200,168,90,.30);
+  box-shadow:0 10px 22px rgba(4,14,12,.18), inset 0 1px 0 rgba(200,168,90,.12);
 }
 .brand-logo-shell:after{
   content:"";position:absolute;inset:1px;border-radius:inherit;pointer-events:none;
-  border:1px solid rgba(255,255,255,.28)
+  border:1px solid rgba(230,211,163,.12)
 }
 .brand-logo-img{
   position:relative;z-index:1;width:auto;height:auto;max-width:100%;max-height:100%;
@@ -76,10 +76,10 @@ code{background:var(--soft2);padding:2px 6px;border-radius:6px;font-size:.86em}
 .brand-logo-only .brand-logo-shell{border-radius:22px;padding:10px}
 .brand-logo-only .brand-logo-shell{
   background:
-    radial-gradient(circle at top left,rgba(255,255,255,.42),transparent 40%),
-    linear-gradient(135deg,rgba(246,242,233,.96),rgba(226,210,166,.88));
-  border-color:rgba(200,168,90,.22);
-  box-shadow:0 10px 22px rgba(4,14,12,.12), inset 0 1px 0 rgba(255,255,255,.50)
+    radial-gradient(circle at top left,rgba(200,168,90,.24),transparent 38%),
+    linear-gradient(135deg,rgba(18,58,47,.98),rgba(4,14,12,.98));
+  border-color:rgba(200,168,90,.34);
+  box-shadow:0 10px 22px rgba(4,14,12,.18), inset 0 1px 0 rgba(200,168,90,.14)
 }
 .brand-logo-only .brand-logo-img{width:auto;max-width:76%;max-height:76%;height:auto}
 .brand-logo-only .brand-logo-balanced .brand-logo-img{max-width:78%;max-height:78%}
@@ -264,7 +264,11 @@ code{background:var(--soft2);padding:2px 6px;border-radius:6px;font-size:.86em}
 .footer a:hover{color:#fff}
 .footer .brand-mark{background:rgba(230,211,163,.08);color:var(--gold-soft)}
 .footer .brand-mark.brand-has-logo{background:transparent}
-.footer .brand-logo-shell{background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(230,211,163,.94))}
+.footer .brand-logo-shell{
+  background:
+    radial-gradient(circle at top left,rgba(200,168,90,.20),transparent 40%),
+    linear-gradient(135deg,rgba(18,58,47,.96),rgba(4,14,12,.98));
+}
 .footer .brand-text{color:#fff}
 .footer-meta{display:block;padding-top:4px;font-size:14px;color:rgba(248,246,241,.78)}
 .footer-bottom{border-top:1px solid rgba(255,255,255,.12);padding:18px 0;font-size:13px;opacity:.8}
@@ -417,8 +421,10 @@ code{background:var(--soft2);padding:2px 6px;border-radius:6px;font-size:.86em}
 .side-brand .brand-mark{background:rgba(230,211,163,.08);color:var(--gold-soft);width:42px;height:42px;font-size:18px}
 .side-brand .brand-mark.brand-has-logo{background:transparent}
 .side-brand .brand-logo-shell{
-  background:linear-gradient(135deg,rgba(248,246,241,.98),rgba(230,211,163,.90));
-  box-shadow:0 10px 20px rgba(4,14,12,.18), inset 0 1px 0 rgba(255,255,255,.45)
+  background:
+    radial-gradient(circle at top left,rgba(200,168,90,.18),transparent 40%),
+    linear-gradient(135deg,rgba(18,58,47,.96),rgba(4,14,12,.98));
+  box-shadow:0 10px 20px rgba(4,14,12,.18), inset 0 1px 0 rgba(200,168,90,.12)
 }
 .side-nav{display:flex;flex-direction:column;gap:3px}
 .side-nav a{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:10px;color:rgba(248,246,241,.78);font-size:14px;font-weight:500}
