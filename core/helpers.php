@@ -37,11 +37,83 @@ function yayasan_logo_url() {
     return $file !== '' ? asset('img/' . $file) : '';
 }
 
+function yayasan_logo_meta() {
+    static $meta = null;
+    if ($meta !== null) {
+        return $meta;
+    }
+
+    $meta = [
+        'file' => '',
+        'url' => '',
+        'width' => 0,
+        'height' => 0,
+        'ratio' => 1.8,
+        'variant' => 'brand-logo-balanced',
+    ];
+
+    $file = yayasan_logo_file();
+    $url = yayasan_logo_url();
+    if ($file === '' || $url === '') {
+        return $meta;
+    }
+
+    $meta['file'] = $file;
+    $meta['url'] = $url;
+
+    $path = asset_image_real_path($file);
+    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    $width = 0;
+    $height = 0;
+
+    if ($path !== null) {
+        if ($ext === 'svg') {
+            $svg = @file_get_contents($path);
+            if (is_string($svg) && $svg !== '') {
+                if (preg_match('/viewBox\s*=\s*"[\d.\-]+\s+[\d.\-]+\s+([\d.]+)\s+([\d.]+)"/i', $svg, $m)) {
+                    $width = (float) $m[1];
+                    $height = (float) $m[2];
+                } elseif (
+                    preg_match('/width\s*=\s*"([\d.]+)(px)?"/i', $svg, $w)
+                    && preg_match('/height\s*=\s*"([\d.]+)(px)?"/i', $svg, $h)
+                ) {
+                    $width = (float) $w[1];
+                    $height = (float) $h[1];
+                }
+            }
+        } elseif (function_exists('getimagesize')) {
+            $size = @getimagesize($path);
+            if (is_array($size)) {
+                $width = (int) ($size[0] ?? 0);
+                $height = (int) ($size[1] ?? 0);
+            }
+        }
+    }
+
+    if ($width > 0 && $height > 0) {
+        $meta['width'] = $width;
+        $meta['height'] = $height;
+        $meta['ratio'] = $width / $height;
+    }
+
+    if ($meta['ratio'] >= 2.45) {
+        $meta['variant'] = 'brand-logo-ultrawide';
+    } elseif ($meta['ratio'] >= 1.65) {
+        $meta['variant'] = 'brand-logo-wide';
+    } elseif ($meta['ratio'] <= 0.9) {
+        $meta['variant'] = 'brand-logo-tall';
+    }
+
+    return $meta;
+}
+
 function render_brand_mark($class = 'brand-mark', $alt = 'Logo Yayasan') {
     $class = trim((string) preg_replace('/[^a-z0-9 _-]/i', '', $class));
-    $logoUrl = yayasan_logo_url();
-    if ($logoUrl !== '') {
-        return '<span class="' . e(trim($class . ' brand-has-logo')) . '"><img class="brand-logo-img" src="' . e($logoUrl) . '" alt="' . e($alt) . '"></span>';
+    $logo = yayasan_logo_meta();
+    if ($logo['url'] !== '') {
+        $logoClass = trim($class . ' brand-has-logo ' . $logo['variant']);
+        $style = '--brand-logo-image:url(\'' . e($logo['url']) . '\')';
+        return '<span class="' . e($logoClass) . '"><span class="brand-logo-shell" style="' . $style . '"><img class="brand-logo-img" src="' . e($logo['url']) . '" alt="' . e($alt) . '" loading="eager" decoding="async"></span></span>';
     }
     return '<span class="' . e($class) . '">﷽</span>';
 }

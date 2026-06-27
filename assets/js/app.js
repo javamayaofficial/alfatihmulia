@@ -57,6 +57,59 @@
     });
   }
 
+  // ---- Motion premium halaman publik ----
+  if(!body.classList.contains('admin-body')){
+    var revealTargets = document.querySelectorAll(
+      '.section, .panel, .program-card, .news-card, .gallery-card, .feature-card, .testi-card, ' +
+      '.partner-card, .org-person-card, .contact-card, .method-card, .doc-item, .board-row, ' +
+      '.stat-card, .cta-banner, .legal-card, .hero-panel'
+    );
+    if(revealTargets.length){
+      body.classList.add('motion-ready');
+      if('IntersectionObserver' in window){
+        var revealObserver = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              entry.target.classList.add('is-visible');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, {threshold: 0.14, rootMargin: '0px 0px -8% 0px'});
+        revealTargets.forEach(function(el){ revealObserver.observe(el); });
+      } else {
+        revealTargets.forEach(function(el){ el.classList.add('is-visible'); });
+      }
+    }
+
+    var parallaxTargets = document.querySelectorAll('.hero, .program-img, .news-img, .gallery-cover, .article-img, .org-photo, .program-hero');
+    if(parallaxTargets.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      parallaxTargets.forEach(function(el){ el.classList.add('parallax-on-scroll'); });
+      var ticking = false;
+      var updateParallax = function(){
+        var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        parallaxTargets.forEach(function(el){
+          var rect = el.getBoundingClientRect();
+          var centerOffset = rect.top + (rect.height / 2) - (viewportHeight / 2);
+          var ratio = Math.max(-1, Math.min(1, centerOffset / viewportHeight));
+          if(el.classList.contains('hero')){
+            el.style.setProperty('--hero-shift', (-ratio * 22).toFixed(2) + 'px');
+          } else {
+            el.style.setProperty('--parallax-shift', (ratio * -18).toFixed(2) + 'px');
+          }
+        });
+        ticking = false;
+      };
+      var requestParallax = function(){
+        if(ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(updateParallax);
+      };
+      updateParallax();
+      window.addEventListener('scroll', requestParallax, {passive:true});
+      window.addEventListener('resize', requestParallax);
+    }
+  }
+
   // ---- Bunyi sukses admin ----
   var successAlert = document.querySelector('.alert-ok[data-sound="save-success"]');
   if(successAlert){
