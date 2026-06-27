@@ -2,6 +2,48 @@
 (function(){
   'use strict';
 
+  // ---- Navigasi publik ----
+  var body = document.body;
+  var navToggle = document.querySelector('.nav-toggle');
+  var dropdownItems = document.querySelectorAll('.nav-item-dropdown');
+
+  dropdownItems.forEach(function(item){
+    var trigger = item.querySelector('.nav-dropdown-toggle');
+    if(!trigger) return;
+    trigger.addEventListener('click', function(){
+      var isOpen = item.classList.contains('open');
+      dropdownItems.forEach(function(other){
+        if(other !== item) {
+          other.classList.remove('open');
+          var otherBtn = other.querySelector('.nav-dropdown-toggle');
+          if(otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+      item.classList.toggle('open', !isOpen);
+      trigger.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+
+  document.addEventListener('click', function(ev){
+    if(!ev.target.closest('.nav-item-dropdown')) {
+      dropdownItems.forEach(function(item){
+        item.classList.remove('open');
+        var trigger = item.querySelector('.nav-dropdown-toggle');
+        if(trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+    if(window.innerWidth <= 860 && body.classList.contains('nav-open') && ev.target.closest('.nav-links a')) {
+      body.classList.remove('nav-open');
+      if(navToggle) navToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  if(navToggle){
+    navToggle.addEventListener('click', function(){
+      navToggle.setAttribute('aria-expanded', String(body.classList.contains('nav-open')));
+    });
+  }
+
   // ---- Counter animasi ----
   function animateCounter(el){
     var target = parseFloat(el.getAttribute('data-target')) || 0;
